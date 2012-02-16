@@ -3,7 +3,7 @@ package to.joe.j2mc.irc;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import to.joe.j2mc.core.event.IRCMessageEvent;
+import to.joe.j2mc.core.event.MessageEvent;;
 
 public class MesssageListener implements Listener{
 	
@@ -13,7 +13,7 @@ public class MesssageListener implements Listener{
 	}
 	
     @EventHandler
-    public void onIRCMessageEvent(IRCMessageEvent event) {
+    public void onIRCMessageEvent(MessageEvent event) {
        
     }
 

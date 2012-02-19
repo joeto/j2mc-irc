@@ -1,0 +1,5 @@
+name: J2MC_IRC
+author: j2dev
+version: unimportant
+main: to.joe.j2mc.irc.J2MC_IRC
+description: j2 irc

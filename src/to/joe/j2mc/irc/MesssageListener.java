@@ -14,7 +14,7 @@ public class MesssageListener implements Listener{
 	
     @EventHandler
     public void onIRCMessageEvent(MessageEvent event) {
-       
+    	String message = event.getMessage();
     }
 
 }

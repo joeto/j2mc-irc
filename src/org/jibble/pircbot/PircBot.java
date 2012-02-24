@@ -107,6 +107,126 @@ public abstract class PircBot implements PircReplyConstants {
     //    this.connect(hostname, port, null);
     //}
     
+    /**
+     * Attempt to connect to the specified IRC server using the supplied
+     * password.
+     * The onConnect method is called upon success.
+     *
+     * @param hostname The hostname of the server to connect to.
+     * @param port The port number to connect to on the server.
+     * @param password The password to use to join the server.
+     *
+     * @throws IOException if it was not possible to connect to the server.
+     * @throws IrcException if the server would not let us join it.
+     * @throws NickAlreadyInUseException if our nick is already in use on the server.
+     */
+    public final synchronized void connectWithNoB(String hostname, int port, String password) throws IOException, IrcException, NickAlreadyInUseException {
+
+        _server = hostname;
+        _port = port;
+        _password = password;
+        
+        if (isConnected()) {
+            throw new IOException("The PircBot is already connected to an IRC server.  Disconnect first.");
+        }
+        
+        // Don't clear the outqueue - there might be something important in it!
+        
+        // Clear everything we may have know about channels.
+        this.removeAllChannels();
+        
+        // Connect to the server.
+        Socket socket =  new Socket(hostname, port);
+        this.log("*** Connected to server.");
+        
+        _inetAddress = socket.getLocalAddress();
+        
+        InputStreamReader inputStreamReader = null;
+        OutputStreamWriter outputStreamWriter = null;
+        if (getEncoding() != null) {
+            // Assume the specified encoding is valid for this JVM.
+            inputStreamReader = new InputStreamReader(socket.getInputStream(), getEncoding());
+            outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), getEncoding());
+        }
+        else {
+            // Otherwise, just use the JVM's default encoding.
+            inputStreamReader = new InputStreamReader(socket.getInputStream());
+            outputStreamWriter = new OutputStreamWriter(socket.getOutputStream());
+        }
+
+        BufferedReader breader = new BufferedReader(inputStreamReader);
+        BufferedWriter bwriter = new BufferedWriter(outputStreamWriter);
+        
+        // Attempt to join the server.
+        if (password != null && !password.equals("")) {
+            OutputThread.sendRawLine(this, bwriter, "PASS " + password);
+        }
+        String nick = this.getName();
+        OutputThread.sendRawLine(this, bwriter, "NICK " + nick);
+        OutputThread.sendRawLine(this, bwriter, "USER " + this.getLogin() + " 8 * :" + this.getVersion());
+
+        _inputThread = new PircInputThread(this, socket, breader, bwriter);
+        
+        // Read stuff back from the server to see if we connected.
+        String line = null;
+        int tries = 1;
+        while ((line = breader.readLine()) != null) {
+            
+            this.handleLine(line);
+            
+            int firstSpace = line.indexOf(" ");
+            int secondSpace = line.indexOf(" ", firstSpace + 1);
+            if (secondSpace >= 0) {
+                String code = line.substring(firstSpace + 1, secondSpace);
+           
+                if (code.equals("004")) {
+                    // We're connected to the server.
+                    break;
+                }
+                else if (code.equals("433")) {
+                    if (_autoNickChange) {
+                        tries++;
+                        nick = getName() + tries;
+                        OutputThread.sendRawLine(this, bwriter, "NICK " + nick);
+                    }
+                    else {
+                        socket.close();
+                        _inputThread = null;
+                        throw new NickAlreadyInUseException(line);
+                    }
+                }
+                else if (code.equals("439")) {
+                    // No action required.
+                }
+                else if (code.startsWith("5") || code.startsWith("4")) {
+                    socket.close();
+                    _inputThread = null;
+                    throw new IrcException("Could not log into the IRC server: " + line);
+                }
+            }
+            this.setNick(nick);
+            
+        }
+        
+        this.log("*** Logged onto server.");
+        
+        // This makes the socket timeout on read operations after 5 minutes.
+        // Maybe in some future version I will let the user change this at runtime.
+        socket.setSoTimeout(5 * 60 * 1000);
+        
+        // Now start the InputThread to read all other lines from the server.
+        _inputThread.start();
+        
+        // Now start the outputThread that will be used to send all messages.
+        if (_outputThread == null) {
+        	_outputThread = new PircOutputThread(this, _outQueue);
+            _outputThread.start();
+        }
+        
+        this.onConnect();
+        
+    }
+    
     
     /**
      * Attempt to connect to the specified IRC server using the supplied

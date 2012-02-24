@@ -1,9 +1,16 @@
 package to.joe.j2mc.irc;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class J2MC_IRC extends JavaPlugin{
+import to.joe.j2mc.core.event.MessageEvent;
 
+public class J2MC_IRC extends JavaPlugin implements Listener{
+
+	public IRCManager IRCManager;
 	public String ServerHost;
 	public int ServerPort;
 	public String nick;
@@ -29,11 +36,21 @@ public class J2MC_IRC extends JavaPlugin{
 		this.AuthservUsername = this.getConfig().getString("authserv.username");
 		this.AuthservPassword = this.getConfig().getString("authserv.password");
 		
+		this.IRCManager = new IRCManager(this);
+		IRCManager.connect();
+		
 		this.getLogger().info("IRC module enabled");
 	}
 	
 	public void onDisable(){
 		this.getLogger().info("IRC module disabled");
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onMessage(PlayerChatEvent event){
+		if(!event.isCancelled()){
+			IRCManager.sendMessage(event.getMessage(), false);
+		}
 	}
 	
 }

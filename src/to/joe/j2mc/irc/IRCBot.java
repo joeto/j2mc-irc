@@ -1,7 +1,10 @@
 package to.joe.j2mc.irc;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.jibble.pircbot.PircBot;
+
+import to.joe.j2mc.core.J2MC_Manager;
 
 public class IRCBot extends PircBot {
 
@@ -13,9 +16,48 @@ public class IRCBot extends PircBot {
 		this.plugin = j2mc_irc;
 	}
 
+	//COmmands begin here.
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
+		//All channel commands.
+		
+		//!playerlist command
+		if(message.equalsIgnoreCase("!playerlist")){
+			int players = 0;
+			for(Player plr : plugin.getServer().getOnlinePlayers()){
+				if(!J2MC_Manager.getVisibility().isVanished(plr)){
+					players++;
+				}
+			}
+			String toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + "): ";
+			if(players != 0){
+				for(Player plr : plugin.getServer().getOnlinePlayers()){
+					if(!J2MC_Manager.getVisibility().isVanished(plr)){
+						toSend = toSend + plr.getName() + ", ";
+					}
+				}
+				toSend = toSend.substring(0, toSend.length() - 2);
+			}else{
+				toSend = toSend + "No one is online :(";
+			}
+			this.sendMessage(channel, toSend);
+		}
+		
+		//!players command
+		if(message.equalsIgnoreCase("!players")){
+			int players = 0;
+			for(Player plr : plugin.getServer().getOnlinePlayers()){
+				if(!J2MC_Manager.getVisibility().isVanished(plr)){
+					players++;
+				}
+			}
+			String toSend = "Currently " + players + " out of " + plugin.getServer().getMaxPlayers() + " on the server";
+			this.sendMessage(channel, toSend);
+		}
+		
+		//Public channel commands.
 		if(channel.equalsIgnoreCase(plugin.NormalChannel)){
-			if (message.startsWith("!msg")) {
+			//!msg command
+			if(message.startsWith("!msg")) {
 				String toSend = message.substring(5);
 				String toSendIRC = "[IRC] <" + sender + "> " + toSend;
 				toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + toSend;
@@ -23,5 +65,11 @@ public class IRCBot extends PircBot {
 				this.sendMessage(channel, toSendIRC);
 			}
 		}
+		
+		//Admin chanel commands.
+		if(channel.equalsIgnoreCase(plugin.AdminChannel)){
+			
+		}
+		
 	}
 }

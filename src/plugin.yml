@@ -6,5 +6,5 @@ author: J2 Minecraft Plugin Team
 description: IRC module
 commands:
   smackirc:
-  description: reloads irc stuff
-  usage: /smackirc
+    description: reloads irc stuff
+    usage: /smackirc

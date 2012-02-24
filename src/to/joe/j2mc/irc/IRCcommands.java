@@ -3,7 +3,6 @@ package to.joe.j2mc.irc;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import to.joe.j2mc.core.J2MC_Core;
 import to.joe.j2mc.core.J2MC_Manager;
 import to.joe.j2mc.core.exceptions.BadPlayerMatchException;
 
@@ -89,6 +88,42 @@ public class IRCcommands {
         }
         String toSend = "Currently " + players + " out of " + plugin.getServer().getMaxPlayers() + " on the server";
         bot.sendMessage(channel, toSend);
+    }
+    
+    public void AdminsCommandinPrivate(String channel){
+        int admins = 0;
+        for(Player plr : plugin.getServer().getOnlinePlayers()){
+            if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+                admins++;
+            }
+        }
+        String toSend = " ";
+        if(admins == 0){
+            toSend = "No admins online";
+        }else{
+            toSend = "There are " + admins + " admins online : ";
+            for(Player plr : plugin.getServer().getOnlinePlayers()){
+                if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+                    toSend = toSend + plr.getName() + ", ";
+                }
+            }
+            toSend = toSend.substring(0, toSend.length() - 2);
+        }
+        bot.sendMessage(channel, toSend);
+    }
+    
+    public void AdminsCommandinPublic(String channel){
+        boolean haveAdmins = false;
+        for(Player plr : plugin.getServer().getOnlinePlayers()){
+            if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+                haveAdmins = true;
+            }
+        }
+        if(haveAdmins){
+            bot.sendMessage(channel, "There are admins online");
+        }else{
+            bot.sendMessage(channel, "No admins online see #joe.to or #minecraft");
+        }
     }
 
 }

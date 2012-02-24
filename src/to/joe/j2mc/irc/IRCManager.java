@@ -32,6 +32,9 @@ public class IRCManager {
 			e.printStackTrace();
 		}
 		plugin.getLogger().info("Connected! Attempting to join channels.");
+		bot.sendMessage("authserv@services.gamesruge.net", "authserv auth " + plugin.AuthservUsername + " " + plugin.AuthservPassword);
+		bot.sendMessage("Chanserv", "inviteme " + plugin.AdminChannel);
+		bot.sendMessage("Chanserv", "inviteme " + plugin.NormalChannel);
 		bot.joinChannel(plugin.NormalChannel);
 		bot.joinChannel(plugin.AdminChannel);
 	}

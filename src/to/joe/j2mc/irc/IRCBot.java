@@ -11,11 +11,14 @@ import to.joe.j2mc.core.exceptions.BadPlayerMatchException;
 public class IRCBot extends PircBot {
 
 	J2MC_IRC plugin;
+	IRCcommands commands;
+	
 	public IRCBot(String nick, J2MC_IRC j2mc_irc) {
 		this.setName(nick);
 		this.setAutoNickChange(true);
 		this.setMessageDelay(1100);
 		this.plugin = j2mc_irc;
+		this.commands = new IRCcommands(this, plugin);
 	}
 
 	//COmmands begin here.
@@ -24,36 +27,12 @@ public class IRCBot extends PircBot {
 		
 		//!playerlist command
 		if(message.equalsIgnoreCase("!playerlist")){
-			int players = 0;
-			for(Player plr : plugin.getServer().getOnlinePlayers()){
-				if(!J2MC_Manager.getVisibility().isVanished(plr)){
-					players++;
-				}
-			}
-			String toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + "): ";
-			if(players != 0){
-				for(Player plr : plugin.getServer().getOnlinePlayers()){
-					if(!J2MC_Manager.getVisibility().isVanished(plr)){
-						toSend = toSend + plr.getName() + ", ";
-					}
-				}
-				toSend = toSend.substring(0, toSend.length() - 2);
-			}else{
-				toSend = toSend + "No one is online :(";
-			}
-			this.sendMessage(channel, toSend);
+		    commands.PlayerListCommand(channel);
 		}
 		
 		//!players command
 		if(message.equalsIgnoreCase("!players")){
-			int players = 0;
-			for(Player plr : plugin.getServer().getOnlinePlayers()){
-				if(!J2MC_Manager.getVisibility().isVanished(plr)){
-					players++;
-				}
-			}
-			String toSend = "Currently " + players + " out of " + plugin.getServer().getMaxPlayers() + " on the server";
-			this.sendMessage(channel, toSend);
+		    commands.PlayersCommand(channel);
 		}
 		
 		//Public channel commands.
@@ -69,30 +48,30 @@ public class IRCBot extends PircBot {
 			
 			//.kick command
 			if(message.startsWith(".kick")){
-			    if(plugin.hosts.containsKey(hostname)){
+			    if(commands.hasAdminPrivelages(hostname)){
 			        String[] args = message.substring(6).split(" ");
-			        String partialplayer = args[0];   
-			        Player target = null;
-			        try{
-			            target = J2MC_Manager.getVisibility().getPlayer(partialplayer, null);
-			        }catch(BadPlayerMatchException e){
-			            this.sendMessage(sender, e.getMessage());
-			            return;
-			        }
+			        String partialplayer = args[0];  
 			        String reason = J2MC_Core.combineSplit(1, args, " ");
-			        if(reason == null){
-			            reason = "Kicked.";
-			        }
-			        target.kickPlayer("Kicked: " + reason);
-			        J2MC_Manager.getCore().adminAndLog(plugin.hosts.get(hostname) + "-irc kicked " + target.getName() + "(" + reason + ")");
-			        J2MC_Manager.getCore().messageNonAdmin(ChatColor.RED + target.getName() + " kicked (" + reason + ")");
+			        commands.dotKickCommand(partialplayer, reason, sender, hostname);
 			    }
 			}
+			
+			//.g command
+			if(message.startsWith(".g")){
+			    if(commands.hasAdminPrivelages(hostname)){
+			        String gmessage = message.substring(3);
+			        commands.dotGCommand(hostname, gmessage);
+			    }
+			}
+			
 		}
 		
 		//Admin chanel commands.
 		if(channel.equalsIgnoreCase(plugin.AdminChannel)){
-			
+		    if(message.startsWith("!has")){
+		        String player = message.substring(4);
+		        commands.HasCommand(player, channel);
+		    }
 		}
 		
 	}

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,23 +30,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 		this.getConfig().options().copyDefaults(true);
 		this.getServer().getPluginManager().registerEvents(this, this);
 		this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
-		
-		this.ServerHost = this.getConfig().getString("server.host");
-		this.ServerPort = this.getConfig().getInt("server.port");
-		this.nick = this.getConfig().getString("server.nick");
-		this.bindToIP = this.getConfig().getBoolean("server.bindtoip");
-		this.BindIP = this.getConfig().getString("server.bindip");
-		
-		this.NormalChannel = this.getConfig().getString("channels.general");
-		this.AdminChannel = this.getConfig().getString("channels.admin");
-		
-		this.AuthservUsername = this.getConfig().getString("authserv.username");
-		this.AuthservPassword = this.getConfig().getString("authserv.password");
-		
+		this.readData();
+		this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
 		this.IRCManager = new IRCManager(this);
 		IRCManager.connect();
-		this.ReadHostsToUsers();
-		
 		this.getLogger().info("IRC module enabled");
 	}
 	
@@ -61,10 +47,13 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 		if(!event.isCancelled()){
 			String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
 			IRCManager.sendMessage(message, false);
+			if(event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")){
+			    IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
+			}
 		}
 	}
 	
-	public void ReadHostsToUsers(){
+	public void readData(){
 	    hosts = new HashMap<String, String>();
 	    try{
 	        PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`='admin' OR `group`='srstaff' ");
@@ -79,6 +68,17 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	    } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+	    this.ServerHost = this.getConfig().getString("server.host");
+	    this.ServerPort = this.getConfig().getInt("server.port");
+	    this.nick = this.getConfig().getString("server.nick");
+	    this.bindToIP = this.getConfig().getBoolean("server.bindtoip");
+	    this.BindIP = this.getConfig().getString("server.bindip");
+	      
+	    this.NormalChannel = this.getConfig().getString("channels.general");
+	    this.AdminChannel = this.getConfig().getString("channels.admin");
+	        
+	    this.AuthservUsername = this.getConfig().getString("authserv.username");
+	    this.AuthservPassword = this.getConfig().getString("authserv.password");
 	}
 	
 }

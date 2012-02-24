@@ -2,6 +2,7 @@ package to.joe.j2mc.irc;
 
 import java.io.IOException;
 
+import org.bukkit.ChatColor;
 import org.jibble.pircbot.*;
 
 public class IRCManager {
@@ -41,10 +42,30 @@ public class IRCManager {
 	
 	public void sendMessage(String message, boolean adminChannel){
 		if(adminChannel){
-			bot.sendMessage(plugin.AdminChannel, message);
+			bot.sendMessage(plugin.AdminChannel, this.colors(message));
 		}else{
-			bot.sendMessage(plugin.NormalChannel, message);
+			bot.sendMessage(plugin.NormalChannel, this.colors(message));
 		}
 	}
+	
+    private String colors(String message) {
+        message=message.replace(ChatColor.AQUA.toString(), PircColors.TEAL);
+        message=message.replace(ChatColor.BLACK.toString(), PircColors.BLACK);
+        message=message.replace(ChatColor.BLUE.toString(), PircColors.BLUE);
+        message=message.replace(ChatColor.DARK_AQUA.toString(), PircColors.BLUE);
+        message=message.replace(ChatColor.DARK_BLUE.toString(), PircColors.BLUE);
+        message=message.replace(ChatColor.DARK_GRAY.toString(), PircColors.DARK_GRAY);
+        message=message.replace(ChatColor.DARK_GREEN.toString(), PircColors.GREEN);
+        message=message.replace(ChatColor.DARK_PURPLE.toString(), PircColors.PURPLE);
+        message=message.replace(ChatColor.DARK_RED.toString(), PircColors.RED);
+        message=message.replace(ChatColor.GOLD.toString(), PircColors.OLIVE);
+        message=message.replace(ChatColor.GRAY.toString(), PircColors.DARK_GRAY);
+        message=message.replace(ChatColor.GREEN.toString(), PircColors.GREEN);
+        message=message.replace(ChatColor.LIGHT_PURPLE.toString(), PircColors.MAGENTA);
+        message=message.replace(ChatColor.RED.toString(), PircColors.RED);
+        message=message.replace(ChatColor.WHITE.toString(), PircColors.NORMAL);
+        message=message.replace(ChatColor.YELLOW.toString(), PircColors.YELLOW);
+        return message;
+    }
 	
 }

@@ -125,5 +125,10 @@ public class IRCcommands {
             bot.sendMessage(channel, "No admins online see #joe.to or #minecraft");
         }
     }
+    
+    public void dotAcommand(String hostname, String message){
+        final String broadcastmessage = "<" + ChatColor.LIGHT_PURPLE + plugin.hosts.get(hostname) + ChatColor.WHITE + "> " + message;
+        J2MC_Manager.getCore().adminAndLog(broadcastmessage);
+    }
 
 }

@@ -1,9 +1,12 @@
 package to.joe.j2mc.irc;
 
+import java.util.HashSet;
+
 import org.bukkit.ChatColor;
 import org.jibble.pircbot.PircBot;
 
 import to.joe.j2mc.core.J2MC_Core;
+import to.joe.j2mc.core.event.MessageEvent;
 
 public class IRCBot extends PircBot {
 
@@ -66,6 +69,12 @@ public class IRCBot extends PircBot {
 			if(MessageArray[0].equalsIgnoreCase("!admins")){
 			    commands.AdminsCommandinPublic(channel);
 			}
+			
+			//.a command
+			if(MessageArray[0].equalsIgnoreCase(".a")){
+			    String Derp = message.substring(3);
+			    commands.dotAcommand(hostname, Derp);
+			}
 		}
 		
 		//Admin chanel commands.
@@ -79,6 +88,13 @@ public class IRCBot extends PircBot {
 		    //!admins command
 		    if(MessageArray[0].equalsIgnoreCase("!admins")){
 		        commands.AdminsCommandinPrivate(channel);
+		    }
+		    
+		    //!reports command
+		    if(message.equalsIgnoreCase("!reports")){
+	            HashSet<String> targets = new HashSet<String>();
+	            targets.add("ReportCall");
+	            plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, "Request for reports. Message useless :3"));
 		    }
 		}
 		

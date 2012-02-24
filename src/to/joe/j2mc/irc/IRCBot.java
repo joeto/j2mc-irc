@@ -4,7 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jibble.pircbot.PircBot;
 
+import to.joe.j2mc.core.J2MC_Core;
 import to.joe.j2mc.core.J2MC_Manager;
+import to.joe.j2mc.core.exceptions.BadPlayerMatchException;
 
 public class IRCBot extends PircBot {
 
@@ -63,6 +65,28 @@ public class IRCBot extends PircBot {
 				toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + toSend;
 				plugin.getServer().broadcastMessage(toSend);
 				this.sendMessage(channel, toSendIRC);
+			}
+			
+			//.kick command
+			if(message.startsWith(".kick")){
+			    if(plugin.hosts.containsKey(hostname)){
+			        String[] args = message.substring(6).split(" ");
+			        String partialplayer = args[0];   
+			        Player target = null;
+			        try{
+			            target = J2MC_Manager.getVisibility().getPlayer(partialplayer, null);
+			        }catch(BadPlayerMatchException e){
+			            this.sendMessage(sender, e.getMessage());
+			            return;
+			        }
+			        String reason = J2MC_Core.combineSplit(1, args, " ");
+			        if(reason == null){
+			            reason = "Kicked.";
+			        }
+			        target.kickPlayer("Kicked: " + reason);
+			        J2MC_Manager.getCore().adminAndLog(plugin.hosts.get(hostname) + "-irc kicked " + target.getName() + "(" + reason + ")");
+			        J2MC_Manager.getCore().messageNonAdmin(ChatColor.RED + target.getName() + " kicked (" + reason + ")");
+			    }
 			}
 		}
 		

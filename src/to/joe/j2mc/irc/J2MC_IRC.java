@@ -1,16 +1,21 @@
 package to.joe.j2mc.irc;
 
-import org.bukkit.Bukkit;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import to.joe.j2mc.core.event.MessageEvent;
+import to.joe.j2mc.core.J2MC_Manager;
 
 public class J2MC_IRC extends JavaPlugin implements Listener{
 
+    public HashMap<String, String> hosts;
 	public IRCManager IRCManager;
 	public String ServerHost;
 	public int ServerPort;
@@ -41,11 +46,13 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 		
 		this.IRCManager = new IRCManager(this);
 		IRCManager.connect();
+		this.ReadHostsToUsers();
 		
 		this.getLogger().info("IRC module enabled");
 	}
 	
 	public void onDisable(){
+	    IRCManager.disconnect();
 		this.getLogger().info("IRC module disabled");
 	}
 	
@@ -55,6 +62,23 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 			String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
 			IRCManager.sendMessage(message, false);
 		}
+	}
+	
+	public void ReadHostsToUsers(){
+	    hosts = new HashMap<String, String>();
+	    try{
+	        PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`='admin' OR `group`='srstaff' ");
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next()){
+	            String user = rs.getString("name");
+	            String host = rs.getString("IRChost");
+	            hosts.put(host, user);
+	        }
+	    }catch(SQLException e){
+	        e.printStackTrace();
+	    } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 	}
 	
 }

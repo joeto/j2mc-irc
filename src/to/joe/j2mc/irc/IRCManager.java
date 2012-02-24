@@ -11,6 +11,10 @@ public class IRCManager {
 		this.plugin = IRC;
 	}
 	
+	public void disconnect(){
+	    bot.disconnect();
+	}
+	
 	public void connect(){
 		bot = new IRCBot(plugin.nick, plugin);
 		try {

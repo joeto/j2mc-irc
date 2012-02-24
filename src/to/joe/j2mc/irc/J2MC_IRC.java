@@ -1,5 +1,6 @@
 package to.joe.j2mc.irc;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,6 +24,8 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	
 	public void onEnable(){
 		this.getConfig().options().copyDefaults(true);
+		this.getServer().getPluginManager().registerEvents(this, this);
+		this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
 		
 		this.ServerHost = this.getConfig().getString("server.host");
 		this.ServerPort = this.getConfig().getInt("server.port");
@@ -49,7 +52,8 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onMessage(PlayerChatEvent event){
 		if(!event.isCancelled()){
-			IRCManager.sendMessage(event.getMessage(), false);
+			String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
+			IRCManager.sendMessage(message, false);
 		}
 	}
 	

@@ -1,0 +1,6 @@
+name: J2MC_IRC
+main: to.joe.j2mc.irc.J2MC_IRC
+version: 0.0prealpha
+website: http://forums.joe.to
+author: J2 Minecraft Plugin Team
+description: IRC module

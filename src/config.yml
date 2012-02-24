@@ -1,0 +1,12 @@
+server:
+  host: irc.gamesurge.net
+  port: 6667
+  nick: loltestbot
+  bindtoip: false
+  bindip: 127.0.0.1
+channels:
+  general: "#ammaraskar"
+  admin: "#mbaxter"
+authserv:
+  username: derp
+  password: lol

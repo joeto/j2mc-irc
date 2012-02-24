@@ -1,5 +1,8 @@
 package to.joe.j2mc.irc;
 
+import java.util.HashSet;
+
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -14,7 +17,14 @@ public class MesssageListener implements Listener{
 	
     @EventHandler
     public void onIRCMessageEvent(MessageEvent event) {
-    	String message = event.getMessage();
+    	HashSet<String> targets = event.alltargets();
+    	for(String target : targets){
+    		if(target.equals("ADMININFO")){
+    			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
+    		}else if(target.equals("GAMEMSG")){
+    			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), false);
+    		}
+    	}
     }
 
 }

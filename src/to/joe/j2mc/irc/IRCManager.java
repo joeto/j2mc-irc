@@ -12,8 +12,9 @@ public class IRCManager {
 	}
 	
 	public void connect(){
-		bot = new IRCBot(plugin.nick);
+		bot = new IRCBot(plugin.nick, plugin);
 		try {
+			plugin.getLogger().info("Attempting connection to " + plugin.ServerHost + ":" + plugin.ServerPort);
 			if(plugin.bindToIP){
 				bot.connect(plugin.ServerHost, plugin.ServerPort, plugin.BindIP);
 			}else{
@@ -26,6 +27,7 @@ public class IRCManager {
 		} catch (IrcException e) {
 			e.printStackTrace();
 		}
+		plugin.getLogger().info("Connected! Attempting to join channels.");
 		bot.joinChannel(plugin.NormalChannel);
 		bot.joinChannel(plugin.AdminChannel);
 	}

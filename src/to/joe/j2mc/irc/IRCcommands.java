@@ -26,20 +26,20 @@ public class IRCcommands {
         try{
             target = J2MC_Manager.getVisibility().getPlayer(partialname, null);
         }catch(BadPlayerMatchException e){
-            bot.sendMessage(sender, e.getMessage());
+            bot.sendNotice(sender, e.getMessage());
             return;
         }
         if(reason == null){
             reason = "Kicked.";
         }
         target.kickPlayer("Kicked: " + reason);
-        bot.sendMessage(sender, target.getName() + " kicked.");
+        bot.sendNotice(sender, target.getName() + " kicked.");
         bot.sendMessage(plugin.NormalChannel, target.getName() + " kicked (" + reason + ")");
         J2MC_Manager.getCore().adminAndLog(plugin.hosts.get(hostname) + "-irc kicked " + target.getName() + "(" + reason + ")");
         J2MC_Manager.getCore().messageNonAdmin(ChatColor.RED + target.getName() + " kicked (" + reason + ")");
     }
     
-    public void dotGCommand(String hostname, String message){
+    public void dotGCommand(String hostname, String message, String sender){
         for (final Player plr : J2MC_Manager.getVisibility().getOnlinePlayers(null)) {
             if (plr.hasPermission("j2mc.adminToolKit.admin")) {
                 plr.sendMessage("<" + plugin.hosts.get(hostname) + "-irc> " + ChatColor.LIGHT_PURPLE + message);
@@ -47,10 +47,41 @@ public class IRCcommands {
                 plr.sendMessage("<ADMIN> " + ChatColor.LIGHT_PURPLE + message);
             }
         }
+        bot.sendNotice(sender, "Broadcasted your message");
         bot.sendMessage(plugin.NormalChannel, "<ADMIN> " + message);
     }
     
-    public void PlayerListCommand(String channel){
+    public void PlayerListCommandInPrivate(String channel){
+        int players = 0;
+        int vanished = 0;
+        for(Player plr : plugin.getServer().getOnlinePlayers()){
+            if(J2MC_Manager.getVisibility().isVanished(plr)){
+                vanished++;
+            }
+            players++;
+        }
+        String toSend;
+        if(vanished == 1){
+            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " 1 vanished): ";
+        }else{
+            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " are vanished): ";
+        }
+        if(players != 0){
+            for(Player plr : plugin.getServer().getOnlinePlayers()){
+                if(J2MC_Manager.getVisibility().isVanished(plr)){
+                    toSend = toSend + plr.getName() + "[vanished], ";
+                }else{
+                    toSend = toSend + plr.getName() + ", ";
+                }
+            }
+            toSend = toSend.substring(0, toSend.length() - 2);
+        }else{
+            toSend = toSend + "No one is online :(";
+        }
+        bot.sendMessage(channel, toSend);
+    }
+    
+    public void PlayerListCommandInPublic(String channel){
         int players = 0;
         for(Player plr : plugin.getServer().getOnlinePlayers()){
             if(!J2MC_Manager.getVisibility().isVanished(plr)){
@@ -79,7 +110,24 @@ public class IRCcommands {
         }
     }
     
-    public void PlayersCommand(String channel){
+    public void PlayersCommandInPrivate(String channel){
+        int players = 0;
+        int vanished = 0;
+        for(Player plr : plugin.getServer().getOnlinePlayers()){
+            if(J2MC_Manager.getVisibility().isVanished(plr)){
+                vanished++;
+            }
+            players++;
+        }
+        String toSend;
+        if(vanished == 1){
+            toSend = "Currently " + players + " out of " + plugin.getServer().getMaxPlayers() + " on the server. " + vanished + " player is vanished";
+        }
+        toSend = "Currently " + players + " out of " + plugin.getServer().getMaxPlayers() + " on the server. " + vanished + " players are vanished";
+        bot.sendMessage(channel, toSend);
+    }
+    
+    public void PlayersCommandInPublic(String channel){
         int players = 0;
         for(Player plr : plugin.getServer().getOnlinePlayers()){
             if(!J2MC_Manager.getVisibility().isVanished(plr)){

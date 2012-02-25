@@ -26,16 +26,6 @@ public class IRCBot extends PircBot {
         // All channel commands.
         String[] MessageArray = message.split(" ");
 
-        // !playerlist command
-        if (message.toLowerCase().equalsIgnoreCase("!playerlist")) {
-            commands.PlayerListCommand(channel);
-        }
-
-        // !players command
-        if (message.toLowerCase().equalsIgnoreCase("!players")) {
-            commands.PlayersCommand(channel);
-        }
-
         // Public channel commands.
         if (channel.equalsIgnoreCase(plugin.NormalChannel)) {
             // !msg command
@@ -61,7 +51,7 @@ public class IRCBot extends PircBot {
             if (MessageArray[0].equalsIgnoreCase(".g")) {
                 if (commands.hasAdminPrivelages(hostname)) {
                     String gmessage = message.substring(3);
-                    commands.dotGCommand(hostname, gmessage);
+                    commands.dotGCommand(hostname, gmessage, sender);
                 }
             }
 
@@ -76,6 +66,16 @@ public class IRCBot extends PircBot {
                     String Derp = message.substring(3);
                     commands.dotAcommand(hostname, Derp);
                 }
+            }
+            
+            // !players command
+            if (message.toLowerCase().equalsIgnoreCase("!players")) {
+                commands.PlayersCommandInPublic(channel);
+            }
+            
+            // !playerlist command
+            if (message.toLowerCase().equalsIgnoreCase("!playerlist")) {
+                commands.PlayerListCommandInPublic(channel);
             }
         }
 
@@ -98,6 +98,16 @@ public class IRCBot extends PircBot {
                 targets.add("ReportCall");
                 plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, "Request for reports. Message useless :3"));
             }
+            
+            //!playerlist command
+            if (message.equalsIgnoreCase("!playerlist")){
+                commands.PlayerListCommandInPrivate(channel);
+            }
+            
+            //!players command
+            if (message.equalsIgnoreCase("!players")){
+                commands.PlayersCommandInPrivate(channel);
+            }
         }
 
     }
@@ -107,11 +117,19 @@ public class IRCBot extends PircBot {
         String[] MessageArray = message.split(" ");
         // playerlist command
         if (message.toLowerCase().equalsIgnoreCase("playerlist")) {
-            commands.PlayerListCommand(sender);
+            if(commands.hasAdminPrivelages(hostname)){
+                commands.PlayerListCommandInPrivate(sender);
+            }else{
+                commands.PlayerListCommandInPublic(sender);
+            }
         }
         // players command
         if (message.toLowerCase().equalsIgnoreCase("players")) {
-            commands.PlayersCommand(sender);
+            if(commands.hasAdminPrivelages(hostname)){
+                commands.PlayersCommandInPrivate(sender);
+            }else{
+                commands.PlayersCommandInPublic(sender);
+            }
         }
         // !msg command
         if (MessageArray[0].equalsIgnoreCase("msg")) {
@@ -134,7 +152,7 @@ public class IRCBot extends PircBot {
         if (MessageArray[0].equalsIgnoreCase("g")) {
             if (commands.hasAdminPrivelages(hostname)) {
                 String gmessage = message.substring(2);
-                commands.dotGCommand(hostname, gmessage);
+                commands.dotGCommand(hostname, gmessage, sender);
             }
         }
         // a command

@@ -101,7 +101,7 @@ public class IRCcommands {
         if(admins == 0){
             toSend = "No admins online";
         }else{
-            toSend = "There are " + admins + " admins online : ";
+            toSend = "Admins: ";
             for(Player plr : plugin.getServer().getOnlinePlayers()){
                 if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
                     toSend = toSend + plr.getName() + ", ";

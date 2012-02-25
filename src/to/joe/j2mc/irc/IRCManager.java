@@ -3,7 +3,9 @@ package to.joe.j2mc.irc;
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
-import org.jibble.pircbot.*;
+import org.jibble.pircbot.IrcException;
+import org.jibble.pircbot.NickAlreadyInUseException;
+import org.jibble.pircbot.PircColors;
 
 public class IRCManager {
 	J2MC_IRC plugin;
@@ -32,8 +34,9 @@ public class IRCManager {
 		} catch (IrcException e) {
 			e.printStackTrace();
 		}
+        plugin.getLogger().info("Attempting auth with " + plugin.AuthservUsername + " and " + plugin.AuthservPassword);
+		bot.sendMessage("authserv@services.gamesurge.net", "auth " + plugin.AuthservUsername + " " + plugin.AuthservPassword);
 		plugin.getLogger().info("Connected! Attempting to join channels.");
-		bot.sendMessage("authserv@services.gamesruge.net", "authserv auth " + plugin.AuthservUsername + " " + plugin.AuthservPassword);
 		bot.sendMessage("Chanserv", "inviteme " + plugin.AdminChannel);
 		bot.sendMessage("Chanserv", "inviteme " + plugin.NormalChannel);
 		bot.joinChannel(plugin.NormalChannel);

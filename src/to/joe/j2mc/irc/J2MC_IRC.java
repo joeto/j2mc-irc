@@ -50,6 +50,9 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 			if(event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")){
 			    IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
 			}
+			if(event.getMessage().contains("##___#######") || event.getMessage().contains("-_-_-_-_-_-_-_,------,")){
+			    IRCManager.sendMessage("Check out " + event.getPlayer().getName() + ", he might be using spam hacks.", true);
+			}
 		}
 	}
 	

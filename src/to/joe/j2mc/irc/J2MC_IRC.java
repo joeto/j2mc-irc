@@ -25,6 +25,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	public String AdminChannel;
 	public String AuthservUsername;
 	public String AuthservPassword;
+	public boolean isBansEnabled = false;
 	
 	public void onEnable(){
 		this.getConfig().options().copyDefaults(true);
@@ -82,6 +83,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	        
 	    this.AuthservUsername = this.getConfig().getString("authserv.username");
 	    this.AuthservPassword = this.getConfig().getString("authserv.password");
+	    
+	    if(this.getServer().getPluginManager().isPluginEnabled("J2MC_Bans")){
+	        this.isBansEnabled = true;
+	    }
 	}
 	
 }

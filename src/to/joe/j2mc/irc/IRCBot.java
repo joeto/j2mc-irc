@@ -77,6 +77,27 @@ public class IRCBot extends PircBot {
             if (message.toLowerCase().equalsIgnoreCase("!playerlist")) {
                 commands.PlayerListCommandInPublic(channel);
             }
+            
+            // addban command
+            if (message.toLowerCase().startsWith(".addban")){
+                if(plugin.isBansEnabled){
+                    if (commands.hasAdminPrivelages(hostname)){
+                        commands.dotAddBanCommand(sender, hostname, message);
+                    }
+                }else{
+                    this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
+                }
+            }
+            // ban command
+            if (message.toLowerCase().startsWith(".ban")){
+                if (plugin.isBansEnabled){
+                    if (commands.hasAdminPrivelages(hostname)){
+                        commands.dotBanCommand(sender, hostname, message);
+                    }
+                }else{
+                    this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
+                }
+            }
         }
 
         // Admin chanel commands.
@@ -168,6 +189,26 @@ public class IRCBot extends PircBot {
                 commands.AdminsCommandinPrivate(sender);
             }else{
                 commands.AdminsCommandinPublic(sender);
+            }
+        }
+        // addban command
+        if (message.toLowerCase().startsWith("addban")){
+            if(plugin.isBansEnabled){
+                if (commands.hasAdminPrivelages(hostname)){
+                    commands.dotAddBanCommand(sender, hostname, message);
+                }
+            }else{
+                this.sendMessage(sender, "Bans module isn't enabled on the server, no addban.");
+            }
+        }
+        // ban command
+        if (message.toLowerCase().startsWith("ban")){
+            if (plugin.isBansEnabled){
+                if (commands.hasAdminPrivelages(hostname)){
+                    commands.dotBanCommand(sender, hostname, message);
+                }
+            }else{
+                this.sendMessage(sender, "Bans module isn't enabled on the server, no addban.");
             }
         }
     }

@@ -1,9 +1,13 @@
 package to.joe.j2mc.irc;
 
+import java.util.HashSet;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import to.joe.j2mc.core.J2MC_Core;
 import to.joe.j2mc.core.J2MC_Manager;
+import to.joe.j2mc.core.event.MessageEvent;
 import to.joe.j2mc.core.exceptions.BadPlayerMatchException;
 
 public class IRCcommands {
@@ -177,6 +181,36 @@ public class IRCcommands {
     public void dotAcommand(String hostname, String message){
         final String broadcastmessage = "<" + ChatColor.LIGHT_PURPLE + plugin.hosts.get(hostname) + ChatColor.WHITE + "> " + message;
         J2MC_Manager.getCore().adminAndLog(broadcastmessage);
+    }
+    
+    public void dotBanCommand(String sender, String hostname, String message){
+        String adminName = plugin.hosts.get(hostname);
+        String[] split = message.split(" ");
+        if(split.length < 3){
+            bot.sendNotice(sender, "Usage: .ban <player> reason");
+            return;
+        }
+        String target = split[1];
+        String reason = J2MC_Core.combineSplit(2, split, " ");
+        String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
+        HashSet<String> targets = new HashSet<String>();
+        targets.add("NEWBAN");
+        plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
+    }
+    
+    public void dotAddBanCommand(String sender, String hostname, String message){
+        String adminName = plugin.hosts.get(hostname);
+        String[] split = message.split(" ");
+        if(split.length < 3){
+            bot.sendNotice(sender, "Usage: .addban <player> reason");
+            return;
+        }
+        String target = split[1];
+        String reason = J2MC_Core.combineSplit(2, split, " ");
+        String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
+        HashSet<String> targets = new HashSet<String>();
+        targets.add("NEWADDBAN");
+        plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
     }
 
 }

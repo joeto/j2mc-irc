@@ -66,7 +66,7 @@ public class IRCcommands {
         }
         String toSend;
         if(vanished == 1){
-            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " 1 vanished): ";
+            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " is vanished): ";
         }else{
             toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " are vanished): ";
         }
@@ -191,7 +191,9 @@ public class IRCcommands {
             return;
         }
         String target = split[1];
+        target.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String reason = J2MC_Core.combineSplit(2, split, " ");
+        reason.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
         HashSet<String> targets = new HashSet<String>();
         targets.add("NEWBAN");
@@ -206,7 +208,9 @@ public class IRCcommands {
             return;
         }
         String target = split[1];
+        target.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String reason = J2MC_Core.combineSplit(2, split, " ");
+        reason.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
         HashSet<String> targets = new HashSet<String>();
         targets.add("NEWADDBAN");

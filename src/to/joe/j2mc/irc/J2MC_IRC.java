@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,6 +34,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 		this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
 		this.readData();
 		this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
+		this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
 		this.IRCManager = new IRCManager(this);
 		IRCManager.connect();
 		this.getLogger().info("IRC module enabled");

@@ -20,6 +20,14 @@ public class IRCBot extends PircBot {
         this.plugin = j2mc_irc;
         this.commands = new IRCcommands(this, plugin);
     }
+    
+    public void onInvite(String targetNick, String sourceNick, String sourceLogin, String sourceHostname, String channel){
+        if(targetNick.equalsIgnoreCase(this.getNick())){
+            if(sourceNick.equalsIgnoreCase("chanserv")){
+                this.joinChannel(channel);
+            }
+        }
+    }
 
     // COmmands begin here.
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
@@ -132,9 +140,27 @@ public class IRCBot extends PircBot {
         }
 
     }
+    
+    @Override
+    protected void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice){
+        if((sourceNick.equalsIgnoreCase("authserv") || sourceNick.equalsIgnoreCase("authServ@services.gamesurge.net")) && target.equalsIgnoreCase(this.getNick())){
+            plugin.getLogger().info("Authserv said this to me: " + notice);
+            if(notice.contains("Your hostmask is not valid for account ")){
+                this.sendMessage("AuthServ", "authcookie " + plugin.AuthservUsername);
+                plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
+            }
+        }
+    }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
+        if(sender.equalsIgnoreCase("authserv") || sender.equalsIgnoreCase("authServ@services.gamesurge.net")){
+            plugin.getLogger().info("Authserv said this to me: " + message);
+            if(message.contains("Your hostmask is not valid for account")){
+                this.sendMessage("AuthServ", "authcookie " + plugin.AuthservUsername);
+                plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
+            }
+        }
         String[] MessageArray = message.split(" ");
         // playerlist command
         if (message.toLowerCase().equalsIgnoreCase("playerlist")) {

@@ -1,6 +1,7 @@
 name: J2MC_IRC
 main: to.joe.j2mc.irc.J2MC_IRC
 version: 0.0prealpha
+load: POSTWORLD
 website: http://forums.joe.to
 author: J2 Minecraft Plugin Team
 description: IRC module
@@ -8,3 +9,6 @@ commands:
   smackirc:
     description: reloads irc stuff
     usage: /smackirc
+  ircmessage:
+    description: send a message on irc to a user
+    usage: /ircmessge user message

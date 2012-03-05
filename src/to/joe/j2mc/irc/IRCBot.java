@@ -21,15 +21,18 @@ public class IRCBot extends PircBot {
         this.commands = new IRCcommands(this, plugin);
     }
     
+    @Override
     public void onInvite(String targetNick, String sourceNick, String sourceLogin, String sourceHostname, String channel){
-        if(targetNick.equalsIgnoreCase(this.getNick())){
-            if(sourceNick.equalsIgnoreCase("chanserv")){
-                this.joinChannel(channel);
-            }
+        plugin.getLogger().info(targetNick + " got invited to channel " + channel + " by " + sourceNick);
+        if(sourceNick.equalsIgnoreCase("chanserv") && targetNick.equalsIgnoreCase(this.getNick())){
+            plugin.getLogger().info("Detected this was an invite from chanserv, so I'm going to join the channel");
+            this.joinChannel(plugin.AdminChannel);
+            this.joinChannel(plugin.NormalChannel);
         }
     }
 
     // COmmands begin here.
+    @Override
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
         // All channel commands.
         String[] MessageArray = message.split(" ");

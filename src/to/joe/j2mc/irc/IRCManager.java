@@ -20,7 +20,7 @@ public class IRCManager {
     }
 
     public void connect() {
-        bot = new IRCBot(plugin.nick, plugin);
+        bot = new IRCBot(plugin.nick, plugin, this);
         try {
             plugin.getLogger().info(
                     "Attempting connection to " + plugin.ServerHost + ":" + plugin.ServerPort);

@@ -12,13 +12,20 @@ public class IRCBot extends PircBot {
 
     J2MC_IRC plugin;
     IRCcommands commands;
+    IRCManager manager;
 
-    public IRCBot(String nick, J2MC_IRC j2mc_irc) {
+    public IRCBot(String nick, J2MC_IRC j2mc_irc, IRCManager manager) {
         this.setName(nick);
         this.setAutoNickChange(true);
         this.setMessageDelay(1100);
         this.plugin = j2mc_irc;
+        this.manager = manager;
         this.commands = new IRCcommands(this, plugin);
+    }
+    
+    @Override
+    public void onDisconnect(){
+        manager.connect();
     }
     
     @Override

@@ -49,10 +49,13 @@ public class IRCBot extends PircBot {
             // !msg command
             if (MessageArray[0].equalsIgnoreCase("!msg")) {
                 String toSend = message.substring(5);
-                String toSendIRC = "[IRC] <" + sender + "> " + toSend;
-                toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + toSend;
-                plugin.getServer().broadcastMessage(toSend);
-                this.sendMessage(channel, toSendIRC);
+                commands.msgCommand(sender, toSend);
+            }
+            
+            //!me command
+            if (message.toLowerCase().startsWith("!me")){
+                String toSend = message.substring(4);
+                commands.MeCommand(sender, toSend);
             }
 
             // .kick command
@@ -96,7 +99,7 @@ public class IRCBot extends PircBot {
                 commands.PlayerListCommandInPublic(channel);
             }
             
-            // addban command
+            // .addban command
             if (message.toLowerCase().startsWith(".addban")){
                 if(plugin.isBansEnabled){
                     if (commands.hasAdminPrivelages(hostname)){
@@ -106,7 +109,7 @@ public class IRCBot extends PircBot {
                     this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
                 }
             }
-            // ban command
+            // .ban command
             if (message.toLowerCase().startsWith(".ban")){
                 if (plugin.isBansEnabled){
                     if (commands.hasAdminPrivelages(hostname)){

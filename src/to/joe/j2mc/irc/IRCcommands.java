@@ -24,6 +24,13 @@ public class IRCcommands {
         return plugin.hosts.containsKey(hostname);
     }
     
+    public void msgCommand(String sender, String message){
+        String toSendIRC = "[IRC] <" + sender + "> " + message;
+        String toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + message;
+        plugin.getServer().broadcastMessage(toSend);
+        bot.sendMessage(plugin.NormalChannel, toSendIRC);
+    }
+    
     public void dotKickCommand(String partialname, String reason, String sender, String hostname){
  
         Player target = null;
@@ -209,6 +216,11 @@ public class IRCcommands {
         HashSet<String> targets = new HashSet<String>();
         targets.add("NEWADDBAN");
         plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
+    }
+    
+    public void MeCommand(String sender, String message){
+        plugin.getServer().broadcastMessage(ChatColor.AQUA + "(IRC) *" + sender + " " + message);
+        bot.sendMessage(plugin.NormalChannel, "[IRC] *" + sender + " " + message);
     }
 
 }

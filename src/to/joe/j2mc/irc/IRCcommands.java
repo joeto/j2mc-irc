@@ -56,28 +56,19 @@ public class IRCcommands {
     }
     
     public void PlayerListCommandInPrivate(String channel){
-        int players = 0;
-        int vanished = 0;
-        for(Player plr : plugin.getServer().getOnlinePlayers()){
-            if(J2MC_Manager.getVisibility().isVanished(plr)){
-                vanished++;
-            }
-            players++;
-        }
         String toSend;
-        if(vanished == 1){
-            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " is vanished): ";
-        }else{
-            toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + ", " + vanished + " are vanished): ";
-        }
-        if(players != 0){
+        toSend = "Players (" + plugin.getServer().getOnlinePlayers().length + " of " + plugin.getServer().getMaxPlayers() + "): ";
+        final StringBuilder builder = new StringBuilder();
+        builder.append(toSend);
+        if(plugin.getServer().getOnlinePlayers().length != 0){
             for(Player plr : plugin.getServer().getOnlinePlayers()){
                 if(J2MC_Manager.getVisibility().isVanished(plr)){
-                    toSend = toSend + plr.getName() + "[vanished], ";
+                    builder.append(plr.getName() + "[V], ");
                 }else{
-                    toSend = toSend + plr.getName() + ", ";
+                    builder.append(plr.getName() + ", ");
                 }
             }
+            toSend = builder.toString();
             toSend = toSend.substring(0, toSend.length() - 2);
         }else{
             toSend = toSend + "No one is online :(";
@@ -93,12 +84,15 @@ public class IRCcommands {
             }
         }
         String toSend = "Players (" + players + " of " + plugin.getServer().getMaxPlayers() + "): ";
+        final StringBuilder builder = new StringBuilder();
+        builder.append(toSend);
         if(players != 0){
             for(Player plr : plugin.getServer().getOnlinePlayers()){
                 if(!J2MC_Manager.getVisibility().isVanished(plr)){
-                    toSend = toSend + plr.getName() + ", ";
+                    builder.append(plr.getName() + ", ");
                 }
             }
+            toSend = builder.toString();
             toSend = toSend.substring(0, toSend.length() - 2);
         }else{
             toSend = toSend + "No one is online :(";

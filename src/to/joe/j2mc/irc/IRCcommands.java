@@ -20,7 +20,7 @@ public class IRCcommands {
         this.bot = bot;
     }
     
-    public boolean hasAdminPrivelages(String hostname){
+    public boolean hasAdminPrivileges(String hostname){
         return plugin.hosts.containsKey(hostname);
     }
     

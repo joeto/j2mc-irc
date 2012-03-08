@@ -60,7 +60,7 @@ public class IRCBot extends PircBot {
 
             // .kick command
             if (MessageArray[0].equalsIgnoreCase(".kick")) {
-                if (commands.hasAdminPrivelages(hostname)) {
+                if (commands.hasAdminPrivileges(hostname)) {
                     String[] args = message.substring(6).split(" ");
                     String partialplayer = args[0];
                     String reason = J2MC_Core.combineSplit(1, args, " ");
@@ -70,7 +70,7 @@ public class IRCBot extends PircBot {
 
             // .g command
             if (MessageArray[0].equalsIgnoreCase(".g")) {
-                if (commands.hasAdminPrivelages(hostname)) {
+                if (commands.hasAdminPrivileges(hostname)) {
                     String gmessage = message.substring(3);
                     commands.dotGCommand(hostname, gmessage, sender);
                 }
@@ -83,7 +83,7 @@ public class IRCBot extends PircBot {
 
             // .a command
             if (MessageArray[0].equalsIgnoreCase(".a")) {
-                if (commands.hasAdminPrivelages(hostname)) {
+                if (commands.hasAdminPrivileges(hostname)) {
                     String Derp = message.substring(3);
                     commands.dotAcommand(hostname, Derp);
                 }
@@ -102,7 +102,7 @@ public class IRCBot extends PircBot {
             // .addban command
             if (message.toLowerCase().startsWith(".addban")){
                 if(plugin.isBansEnabled){
-                    if (commands.hasAdminPrivelages(hostname)){
+                    if (commands.hasAdminPrivileges(hostname)){
                         commands.dotAddBanCommand(sender, hostname, message);
                     }
                 }else{
@@ -112,7 +112,7 @@ public class IRCBot extends PircBot {
             // .ban command
             if (message.toLowerCase().startsWith(".ban")){
                 if (plugin.isBansEnabled){
-                    if (commands.hasAdminPrivelages(hostname)){
+                    if (commands.hasAdminPrivileges(hostname)){
                         commands.dotBanCommand(sender, hostname, message);
                     }
                 }else{
@@ -177,7 +177,7 @@ public class IRCBot extends PircBot {
         String[] MessageArray = message.split(" ");
         // playerlist command
         if (message.toLowerCase().equalsIgnoreCase("playerlist")) {
-            if(commands.hasAdminPrivelages(hostname)){
+            if(commands.hasAdminPrivileges(hostname)){
                 commands.PlayerListCommandInPrivate(sender);
             }else{
                 commands.PlayerListCommandInPublic(sender);
@@ -185,7 +185,7 @@ public class IRCBot extends PircBot {
         }
         // players command
         if (message.toLowerCase().equalsIgnoreCase("players")) {
-            if(commands.hasAdminPrivelages(hostname)){
+            if(commands.hasAdminPrivileges(hostname)){
                 commands.PlayersCommandInPrivate(sender);
             }else{
                 commands.PlayersCommandInPublic(sender);
@@ -201,7 +201,7 @@ public class IRCBot extends PircBot {
         }
         // kick command
         if (MessageArray[0].equalsIgnoreCase("kick")) {
-            if (commands.hasAdminPrivelages(hostname)) {
+            if (commands.hasAdminPrivileges(hostname)) {
                 String[] args = message.substring(5).split(" ");
                 String partialplayer = args[0];
                 String reason = J2MC_Core.combineSplit(1, args, " ");
@@ -210,21 +210,21 @@ public class IRCBot extends PircBot {
         }
         // g command
         if (MessageArray[0].equalsIgnoreCase("g")) {
-            if (commands.hasAdminPrivelages(hostname)) {
+            if (commands.hasAdminPrivileges(hostname)) {
                 String gmessage = message.substring(2);
                 commands.dotGCommand(hostname, gmessage, sender);
             }
         }
         // a command
         if (MessageArray[0].equalsIgnoreCase("a")) {
-            if (commands.hasAdminPrivelages(hostname)) {
+            if (commands.hasAdminPrivileges(hostname)) {
                 String Derp = message.substring(2);
                 commands.dotAcommand(hostname, Derp);
             }
         }
         // admins command
         if (MessageArray[0].equalsIgnoreCase("admins")) {
-            if (commands.hasAdminPrivelages(hostname)) {
+            if (commands.hasAdminPrivileges(hostname)) {
                 commands.AdminsCommandinPrivate(sender);
             }else{
                 commands.AdminsCommandinPublic(sender);
@@ -233,7 +233,7 @@ public class IRCBot extends PircBot {
         // addban command
         if (message.toLowerCase().startsWith("addban")){
             if(plugin.isBansEnabled){
-                if (commands.hasAdminPrivelages(hostname)){
+                if (commands.hasAdminPrivileges(hostname)){
                     commands.dotAddBanCommand(sender, hostname, message);
                 }
             }else{
@@ -243,7 +243,7 @@ public class IRCBot extends PircBot {
         // ban command
         if (message.toLowerCase().startsWith("ban")){
             if (plugin.isBansEnabled){
-                if (commands.hasAdminPrivelages(hostname)){
+                if (commands.hasAdminPrivileges(hostname)){
                     commands.dotBanCommand(sender, hostname, message);
                 }
             }else{

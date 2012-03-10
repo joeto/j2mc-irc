@@ -9,7 +9,7 @@ import org.jibble.pircbot.PircColors;
 
 public class IRCManager {
     J2MC_IRC plugin;
-    IRCBot bot;
+    public IRCBot bot;
 
     public IRCManager(J2MC_IRC IRC) {
         this.plugin = IRC;

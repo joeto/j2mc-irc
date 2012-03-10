@@ -1,4 +1,4 @@
-package to.joe.j2mc.irc;
+package to.joe.j2mc.irc.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import to.joe.j2mc.core.J2MC_Core;
 import to.joe.j2mc.core.command.MasterCommand;
+import to.joe.j2mc.irc.J2MC_IRC;
 
 public class IRCMessageCommand extends MasterCommand{
     
@@ -18,7 +19,7 @@ public class IRCMessageCommand extends MasterCommand{
     
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
-        if(sender.hasPermission("j2mc.senior")){
+        if(sender.hasPermission("j2mc.irc.management")){
             if(args.length < 2){
                 sender.sendMessage(ChatColor.RED + "Usage: /ircmessage target message");
                 return;

@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.core.J2MC_Manager;
+import to.joe.j2mc.irc.commands.IRCMessageCommand;
+import to.joe.j2mc.irc.commands.SmackIRCCommand;
 
 public class J2MC_IRC extends JavaPlugin implements Listener{
 

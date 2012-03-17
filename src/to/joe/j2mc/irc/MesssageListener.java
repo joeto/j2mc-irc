@@ -22,7 +22,7 @@ public class MesssageListener implements Listener{
     		if(target.equals("ADMININFO")){
     			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
     		}else if(target.equals("GAMEMSG")){
-    			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), false);
+    			plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), plugin.NormalChannel);
     		}
     	}
     }

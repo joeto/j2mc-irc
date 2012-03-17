@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Timer;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,8 @@ import to.joe.j2mc.irc.commands.SmackIRCCommand;
 
 public class J2MC_IRC extends JavaPlugin implements Listener{
 
+    public Queue queue;
+    Timer timer;
     public HashMap<String, String> hosts;
 	public IRCManager IRCManager;
 	public String ServerHost;
@@ -38,6 +41,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 		this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
 		this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
 		this.IRCManager = new IRCManager(this);
+		this.queue = new Queue(this);
+		timer = new Timer();
+		timer.schedule(queue, 10000, 10000);
+		IRCManager.start();
 		IRCManager.connect();
 		this.getLogger().info("IRC module enabled");
 	}
@@ -51,7 +58,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 	public void onMessage(PlayerChatEvent event){
 		if(!event.isCancelled()){
 			String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
-			IRCManager.sendMessage(message, false);
+			queue.sendMessage(message, NormalChannel);
 			if(event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")){
 			    IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
 			}

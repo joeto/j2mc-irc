@@ -7,7 +7,7 @@ import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircColors;
 
-public class IRCManager {
+public class IRCManager extends Thread{
     J2MC_IRC plugin;
     public IRCBot bot;
 

@@ -10,13 +10,15 @@ import org.jibble.pircbot.PircColors;
 public class IRCManager extends Thread{
     J2MC_IRC plugin;
     public IRCBot bot;
-
+    boolean noreturn = false;
+    
     public IRCManager(J2MC_IRC IRC) {
         this.plugin = IRC;
     }
 
     public void disconnect() {
         bot.disconnect();
+        noreturn = true;
     }
 
     public void connect() {

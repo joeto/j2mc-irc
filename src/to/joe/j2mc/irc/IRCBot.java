@@ -25,7 +25,9 @@ public class IRCBot extends PircBot {
     
     @Override
     public void onDisconnect(){
-        manager.connect();
+        if(!manager.noreturn){
+            manager.connect();
+        }
     }
     
     @Override
@@ -117,6 +119,15 @@ public class IRCBot extends PircBot {
                     }
                 }else{
                     this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
+                }
+            }
+            // .unban command
+            if (message.toLowerCase().startsWith(".unban")){
+                if (plugin.isBansEnabled){
+                    if (commands.hasAdminPrivileges(hostname)){
+                        String whoToUnban = message.substring(7);
+                        commands.dotUnbanCommand(sender, hostname, whoToUnban);
+                    }
                 }
             }
         }
@@ -248,6 +259,15 @@ public class IRCBot extends PircBot {
                 }
             }else{
                 this.sendMessage(sender, "Bans module isn't enabled on the server, no addban.");
+            }
+        }
+        // unban command
+        if (message.toLowerCase().startsWith("unban")){
+            if (plugin.isBansEnabled){
+                if (commands.hasAdminPrivileges(hostname)){
+                    String whoToUnban = message.substring(6);
+                    commands.dotUnbanCommand(sender, hostname, whoToUnban);
+                }
             }
         }
     }

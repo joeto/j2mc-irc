@@ -23,6 +23,9 @@ public class MesssageListener implements Listener{
     			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
     		}else if(target.equals("GAMEMSG")){
     			plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), plugin.NormalChannel);
+    		}else if(target.startsWith("SendNotice")){
+    		    String WhoToSend = target.split(" ")[1];
+    		    plugin.IRCManager.bot.sendNotice(WhoToSend, event.getMessage());
     		}
     	}
     }

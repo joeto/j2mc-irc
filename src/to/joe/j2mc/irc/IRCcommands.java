@@ -188,14 +188,14 @@ public class IRCcommands {
         String adminName = plugin.hosts.get(hostname);
         String[] split = message.split(" ");
         if(split.length < 3){
-            bot.sendNotice(sender, "Usage: .ban <player> reason");
+            bot.sendNotice(sender, "Usage: ban <player> reason");
             return;
         }
         String target = split[1];
-        target.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String reason = J2MC_Core.combineSplit(2, split, " ");
-        reason.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
-        String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
+        target = target.replace(":", "/OMGREPLACEWITHCOLON\\");
+        reason = reason.replace(":", "/OMGREPLACEWITHCOLON\\");
+        final String toSend = (adminName + ":" + target + ":" + reason + ":" + sender);
         HashSet<String> targets = new HashSet<String>();
         targets.add("NEWBAN");
         plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
@@ -205,16 +205,24 @@ public class IRCcommands {
         String adminName = plugin.hosts.get(hostname);
         String[] split = message.split(" ");
         if(split.length < 3){
-            bot.sendNotice(sender, "Usage: .addban <player> reason");
+            bot.sendNotice(sender, "Usage: addban <player> reason");
             return;
         }
         String target = split[1];
-        target.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
         String reason = J2MC_Core.combineSplit(2, split, " ");
-        reason.replace("&", "*OMGROFLREPLACEMEIWITHAMPERSAND*").replace("=", "*OMGROFLREPLACEMEWITHEQUALS");
-        String toSend = "admin=" + adminName + "&target=" + target + "&reason=" + reason;
+        target = target.replace(":", "/OMGREPLACEWITHCOLON\\");
+        reason = reason.replace(":", "/OMGREPLACEWITHCOLON\\");
+        final String toSend = (adminName + ":" + target + ":" + reason + ":" + sender);
         HashSet<String> targets = new HashSet<String>();
         targets.add("NEWADDBAN");
+        plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
+    }
+    
+    public void dotUnbanCommand(String sender, String hostname, String whoToUnban){
+        String adminName = plugin.hosts.get(hostname);
+        final String toSend = adminName + ":" + whoToUnban + ":" + sender;
+        HashSet<String> targets = new HashSet<String>();
+        targets.add("UNBAN");
         plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
     }
     

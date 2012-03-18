@@ -243,11 +243,11 @@ public abstract class PircBot implements PircReplyConstants {
      */
     public final synchronized void connect(String hostname, int port, String localip) throws IOException, IrcException, NickAlreadyInUseException {
     	//laziest fix ever ^_^
-    	String password=null;
+    	//String password=null;
     	
         _server = hostname;
         _port = port;
-        _password = password;
+        _password = null;//=password
         
         
         InetAddress self=InetAddress.getByName(localip);
@@ -284,9 +284,9 @@ public abstract class PircBot implements PircReplyConstants {
         BufferedWriter bwriter = new BufferedWriter(outputStreamWriter);
         
         // Attempt to join the server.
-        if (password != null && !password.equals("")) {
-            PircOutputThread.sendRawLine(this, bwriter, "PASS " + password);
-        }
+        //if (password != null && !password.equals("")) {
+        //    PircOutputThread.sendRawLine(this, bwriter, "PASS " + password);
+        //}
         String nick = this.getName();
         PircOutputThread.sendRawLine(this, bwriter, "NICK " + nick);
         PircOutputThread.sendRawLine(this, bwriter, "USER " + this.getLogin() + " 8 * :" + this.getVersion());
@@ -1235,8 +1235,7 @@ public abstract class PircBot implements PircReplyConstants {
      * @param code The three-digit numerical code for the response.
      * @param response The full response from the IRC server.
      */
-    @SuppressWarnings("unchecked")
-	private final void processServerResponse(int code, String response) {
+    private final void processServerResponse(int code, String response) {
         
         if (code == RPL_LIST) {
             // This is a bit of information about a channel.
@@ -2968,15 +2967,14 @@ public abstract class PircBot implements PircReplyConstants {
      * 
      * @see #onUserList(String,PircUser[]) onUserList
      */
-    @SuppressWarnings("unchecked")
 	public final PircUser[] getUsers(String channel) {
         channel = channel.toLowerCase();
         PircUser[] userArray = new PircUser[0];
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<?, ?> users = (Hashtable<?, ?>) _channels.get(channel);
             if (users != null) {
                 userArray = new PircUser[users.size()];
-                Enumeration enumeration = users.elements();
+                Enumeration<?> enumeration = users.elements();
                 for (int i = 0; i < userArray.length; i++) {
                     PircUser user = (PircUser) enumeration.nextElement();
                     userArray[i] = user;
@@ -2999,12 +2997,11 @@ public abstract class PircBot implements PircReplyConstants {
      * @return A String array containing the names of all channels that we
      *         are in.
      */
-    @SuppressWarnings("unchecked")
-	public final String[] getChannels() {
+    public final String[] getChannels() {
         String[] channels = new String[0];
         synchronized (_channels) {
             channels = new String[_channels.size()];
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             for (int i = 0; i < channels.length; i++) {
                 channels[i] = (String) enumeration.nextElement();
             }
@@ -3043,13 +3040,12 @@ public abstract class PircBot implements PircReplyConstants {
      * Add a user to the specified channel in our memory.
      * Overwrite the existing entry if it exists.
      */
-    @SuppressWarnings("unchecked")
 	private final void addUser(String channel, PircUser user) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<PircUser, PircUser> users = (Hashtable<PircUser, PircUser>) _channels.get(channel);
             if (users == null) {
-                users = new Hashtable();
+                users = new Hashtable<PircUser, PircUser>();
                 _channels.put(channel, users);
             }
             users.put(user, user);
@@ -3060,12 +3056,11 @@ public abstract class PircBot implements PircReplyConstants {
     /**
      * Remove a user from the specified channel in our memory.
      */
-    @SuppressWarnings("unchecked")
-	private final PircUser removeUser(String channel, String nick) {
+    private final PircUser removeUser(String channel, String nick) {
         channel = channel.toLowerCase();
         PircUser user = new PircUser("", nick);
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<?, ?> users = (Hashtable<?, ?>) _channels.get(channel);
             if (users != null) {
                 return (PircUser) users.remove(user);
             }
@@ -3077,10 +3072,9 @@ public abstract class PircBot implements PircReplyConstants {
     /**
      * Remove a user from all channels in our memory.
      */
-    @SuppressWarnings("unchecked")
-	private final void removeUser(String nick) {
+    private final void removeUser(String nick) {
         synchronized (_channels) {
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
                 String channel = (String) enumeration.nextElement();
                 this.removeUser(channel, nick);
@@ -3092,10 +3086,9 @@ public abstract class PircBot implements PircReplyConstants {
     /**
      * Rename a user if they appear in any of the channels we know about.
      */
-    @SuppressWarnings("unchecked")
 	private final void renameUser(String oldNick, String newNick) {
         synchronized (_channels) {
-            Enumeration enumeration = _channels.keys();
+            Enumeration<String> enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
                 String channel = (String) enumeration.nextElement();
                 PircUser user = this.removeUser(channel, oldNick);
@@ -3122,22 +3115,20 @@ public abstract class PircBot implements PircReplyConstants {
     /**
      * Removes all channels from our memory of users.
      */
-    @SuppressWarnings("unchecked")
 	private final void removeAllChannels() {
         synchronized(_channels) {
-            _channels = new Hashtable();
+            _channels = new Hashtable<String, Hashtable<PircUser, PircUser>>();
         }
     }
 
 
-    @SuppressWarnings("unchecked")
 	private final void updateUser(String channel, int userMode, String nick) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
-            Hashtable users = (Hashtable) _channels.get(channel);
+            Hashtable<PircUser, PircUser> users = (Hashtable<PircUser, PircUser>) _channels.get(channel);
             PircUser newUser = null;
             if (users != null) {
-                Enumeration enumeration = users.elements();
+                Enumeration<PircUser> enumeration = users.elements();
                 while(enumeration.hasMoreElements()) {
                     PircUser userObj = (PircUser) enumeration.nextElement();
                     if (userObj.getNick().equalsIgnoreCase(nick)) {
@@ -3205,13 +3196,11 @@ public abstract class PircBot implements PircReplyConstants {
     
     // A Hashtable of channels that points to a selfreferential Hashtable of
     // User objects (used to remember which users are in which channels).
-    @SuppressWarnings("unchecked")
-	private Hashtable _channels = new Hashtable();
+	private Hashtable<String, Hashtable<PircUser, PircUser>> _channels = new Hashtable<String, Hashtable<PircUser, PircUser>>();
     
     // A Hashtable to temporarily store channel topics when we join them
     // until we find out who set that topic.
-    @SuppressWarnings("unchecked")
-	private Hashtable _topics = new Hashtable();
+	private Hashtable<String, String> _topics = new Hashtable<String, String>();
     
     // DccManager to process and handle all DCC events.
     private PircDccManager _dccManager = new PircDccManager(this);

@@ -131,7 +131,6 @@ public class PircDccManager {
      * 
      * @param transfer the DccFileTransfer that may be resumed.
      */
-    @SuppressWarnings("unchecked")
 	void addAwaitingResume(PircDccFileTransfer transfer) {
         synchronized (_awaitingResume) {
             _awaitingResume.addElement(transfer);
@@ -148,7 +147,6 @@ public class PircDccManager {
     
     
     private PircBot _bot;
-    @SuppressWarnings("unchecked")
-	private Vector _awaitingResume = new Vector();
+	private Vector<PircDccFileTransfer> _awaitingResume = new Vector<PircDccFileTransfer>();
     
 }

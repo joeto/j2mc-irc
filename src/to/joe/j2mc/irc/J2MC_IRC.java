@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Timer;
 
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.core.J2MC_Manager;
+import to.joe.j2mc.core.event.MessageEvent;
 import to.joe.j2mc.irc.commands.IRCMessageCommand;
 import to.joe.j2mc.irc.commands.SmackIRCCommand;
 
@@ -63,7 +65,15 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 			    IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
 			}
 			if(event.getMessage().contains("##___#######") || event.getMessage().contains("-_-_-_-_-_-_-_,------,")){
-			    IRCManager.sendMessage("Check out " + event.getPlayer().getName() + ", he might be using spam hacks.", true);
+			    if(isBansEnabled){
+			        String toSend = "BobTheHAXXXXXXguy:" + event.getPlayer().getName() + ":Using nyancraft spam hacks:ammar2";
+			        HashSet<String> targets = new HashSet<String>();
+			        targets.add("NEWADDBAN");
+			        this.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
+			        IRCManager.sendMessage("Banned " + event.getPlayer().getName() + " for using nyancraft, please verify this was not a false positive", true);
+			    }else{
+			        IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage() , true);
+			    }
 			}
 		}
 	}

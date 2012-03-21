@@ -72,7 +72,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener{
 			        this.getServer().getPluginManager().callEvent(new MessageEvent(targets, toSend));
 			        IRCManager.sendMessage("Banned " + event.getPlayer().getName() + " for using nyancraft, please verify this was not a false positive", true);
 			    }else{
-			        IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage() , true);
+			        IRCManager.sendMessage("Check out " + event.getPlayer().getName() + ", he is probably using spam hacks (nyancraft)", true);
 			    }
 			}
 		}

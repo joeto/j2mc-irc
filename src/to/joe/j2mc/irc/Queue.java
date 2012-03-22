@@ -19,12 +19,19 @@ public class Queue extends TimerTask {
         synchronized (this) {
             OutGoingMessages++;
         }
-        if (OutGoingMessages >= 10) {
+        if (OutGoingMessages >= 10 && OutGoingMessages < 20) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
             plugin.IRCManager.bot.sendMessage(channel, message);
+        } else if(OutGoingMessages >= 20) {
+            try {
+                Thread.sleep(2000);                
+            } catch (InterruptedException e) {
+            }
+            plugin.IRCManager.bot.sendMessage(channel, message);
+  
         } else {
             plugin.IRCManager.bot.sendMessage(channel, message);
         }

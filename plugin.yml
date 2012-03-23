@@ -1,7 +1,6 @@
 name: J2MC_IRC
 main: to.joe.j2mc.irc.J2MC_IRC
-version: 0.0prealpha
-load: POSTWORLD
+version: 1.0
 website: http://forums.joe.to
 author: J2 Minecraft Plugin Team
 description: IRC module

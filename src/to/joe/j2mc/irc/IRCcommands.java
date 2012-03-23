@@ -52,7 +52,7 @@ public class IRCcommands {
     
     public void dotGCommand(String hostname, String message, String sender){
         for (final Player plr : J2MC_Manager.getVisibility().getOnlinePlayers(null)) {
-            if (plr.hasPermission("j2mc.adminToolKit.admin")) {
+            if (plr.hasPermission("j2mc.admintoolkit.admin")) {
                 plr.sendMessage("<" + plugin.hosts.get(hostname) + "-irc> " + ChatColor.LIGHT_PURPLE + message);
             } else {
                 plr.sendMessage("<ADMIN> " + ChatColor.LIGHT_PURPLE + message);
@@ -147,7 +147,7 @@ public class IRCcommands {
     public void AdminsCommandinPrivate(String channel){
         int admins = 0;
         for(Player plr : plugin.getServer().getOnlinePlayers()){
-            if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+            if(plr.hasPermission("j2mc.core.admin")){
                 admins++;
             }
         }
@@ -157,7 +157,7 @@ public class IRCcommands {
         }else{
             toSend = "Admins: ";
             for(Player plr : plugin.getServer().getOnlinePlayers()){
-                if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+                if(plr.hasPermission("j2mc.core.admin")){
                     toSend = toSend + plr.getName() + ", ";
                 }
             }
@@ -169,7 +169,7 @@ public class IRCcommands {
     public void AdminsCommandinPublic(String channel){
         boolean haveAdmins = false;
         for(Player plr : plugin.getServer().getOnlinePlayers()){
-            if(J2MC_Manager.getPermissions().isAdmin(plr.getName())){
+            if(plr.hasPermission("j2mc.core.admin")){
                 haveAdmins = true;
             }
         }

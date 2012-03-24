@@ -35,6 +35,7 @@ public class IRCManager extends Thread {
     }
 
     public void disconnect() {
+        this.bot.quitServer("SHUT. DOWN. EVERYTHING.");
         this.bot.disconnect();
         this.noreturn = true;
     }

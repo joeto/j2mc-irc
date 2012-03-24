@@ -11,7 +11,7 @@ import to.joe.j2mc.core.event.MessageEvent;
 public class IRCBot extends PircBot {
 
     J2MC_IRC plugin;
-    IRCcommands commands;
+    IRCCommands commands;
     IRCManager manager;
 
     public IRCBot(String nick, J2MC_IRC j2mc_irc, IRCManager manager) {
@@ -20,23 +20,23 @@ public class IRCBot extends PircBot {
         this.setMessageDelay(1100);
         this.plugin = j2mc_irc;
         this.manager = manager;
-        this.commands = new IRCcommands(this, plugin);
+        this.commands = new IRCCommands(this, this.plugin);
     }
-    
+
     @Override
-    public void onDisconnect(){
-        if(!manager.noreturn){
-            manager.connect();
+    public void onDisconnect() {
+        if (!this.manager.noreturn) {
+            this.manager.connect();
         }
     }
-    
+
     @Override
-    public void onInvite(String targetNick, String sourceNick, String sourceLogin, String sourceHostname, String channel){
-        plugin.getLogger().info(targetNick + " got invited to channel " + channel + " by " + sourceNick);
-        if(sourceNick.equalsIgnoreCase("chanserv") && targetNick.equalsIgnoreCase(this.getNick())){
-            plugin.getLogger().info("Detected this was an invite from chanserv, so I'm going to join the channel");
-            this.joinChannel(plugin.AdminChannel);
-            this.joinChannel(plugin.NormalChannel);
+    public void onInvite(String targetNick, String sourceNick, String sourceLogin, String sourceHostname, String channel) {
+        this.plugin.getLogger().info(targetNick + " got invited to channel " + channel + " by " + sourceNick);
+        if (sourceNick.equalsIgnoreCase("chanserv") && targetNick.equalsIgnoreCase(this.getNick())) {
+            this.plugin.getLogger().info("Detected this was an invite from chanserv, so I'm going to join the channel");
+            this.joinChannel(this.plugin.AdminChannel);
+            this.joinChannel(this.plugin.NormalChannel);
         }
     }
 
@@ -44,229 +44,229 @@ public class IRCBot extends PircBot {
     @Override
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
         // All channel commands.
-        String[] MessageArray = message.split(" ");
+        final String[] MessageArray = message.split(" ");
 
         // Public channel commands.
-        if (channel.equalsIgnoreCase(plugin.NormalChannel)) {
+        if (channel.equalsIgnoreCase(this.plugin.NormalChannel)) {
             // !msg command
             if (MessageArray[0].equalsIgnoreCase("!msg")) {
-                String toSend = message.substring(5);
-                commands.msgCommand(sender, toSend);
+                final String toSend = message.substring(5);
+                this.commands.msgCommand(sender, toSend);
             }
-            
+
             //!me command
-            if (message.toLowerCase().startsWith("!me")){
-                String toSend = message.substring(4);
-                commands.MeCommand(sender, toSend);
+            if (message.toLowerCase().startsWith("!me")) {
+                final String toSend = message.substring(4);
+                this.commands.MeCommand(sender, toSend);
             }
 
             // .kick command
             if (MessageArray[0].equalsIgnoreCase(".kick")) {
-                if (commands.hasAdminPrivileges(hostname)) {
-                    String[] args = message.substring(6).split(" ");
-                    String partialplayer = args[0];
-                    String reason = J2MC_Core.combineSplit(1, args, " ");
-                    commands.dotKickCommand(partialplayer, reason, sender, hostname);
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    final String[] args = message.substring(6).split(" ");
+                    final String partialplayer = args[0];
+                    final String reason = J2MC_Core.combineSplit(1, args, " ");
+                    this.commands.dotKickCommand(partialplayer, reason, sender, hostname);
                 }
             }
 
             // .g command
             if (MessageArray[0].equalsIgnoreCase(".g")) {
-                if (commands.hasAdminPrivileges(hostname)) {
-                    String gmessage = message.substring(3);
-                    commands.dotGCommand(hostname, gmessage, sender);
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    final String gmessage = message.substring(3);
+                    this.commands.dotGCommand(hostname, gmessage, sender);
                 }
             }
 
             // !admins command
             if (MessageArray[0].equalsIgnoreCase("!admins")) {
-                commands.AdminsCommandinPublic(channel);
+                this.commands.AdminsCommandinPublic(channel);
             }
 
             // .a command
             if (MessageArray[0].equalsIgnoreCase(".a")) {
-                if (commands.hasAdminPrivileges(hostname)) {
-                    String Derp = message.substring(3);
-                    commands.dotAcommand(hostname, Derp);
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    final String Derp = message.substring(3);
+                    this.commands.dotAcommand(hostname, Derp);
                 }
             }
-            
+
             // !players command
             if (message.toLowerCase().equalsIgnoreCase("!players")) {
-                commands.PlayersCommandInPublic(channel);
+                this.commands.PlayersCommandInPublic(channel);
             }
-            
+
             // !playerlist command
             if (message.toLowerCase().equalsIgnoreCase("!playerlist")) {
-                commands.PlayerListCommandInPublic(channel);
+                this.commands.PlayerListCommandInPublic(channel);
             }
-            
+
             // .addban command
-            if (message.toLowerCase().startsWith(".addban")){
-                if(plugin.isBansEnabled){
-                    if (commands.hasAdminPrivileges(hostname)){
-                        commands.dotAddBanCommand(sender, hostname, message);
+            if (message.toLowerCase().startsWith(".addban")) {
+                if (this.plugin.isBansEnabled) {
+                    if (this.commands.hasAdminPrivileges(hostname)) {
+                        this.commands.dotAddBanCommand(sender, hostname, message);
                     }
-                }else{
+                } else {
                     this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
                 }
             }
             // .ban command
-            if (message.toLowerCase().startsWith(".ban")){
-                if (plugin.isBansEnabled){
-                    if (commands.hasAdminPrivileges(hostname)){
-                        commands.dotBanCommand(sender, hostname, message);
+            if (message.toLowerCase().startsWith(".ban")) {
+                if (this.plugin.isBansEnabled) {
+                    if (this.commands.hasAdminPrivileges(hostname)) {
+                        this.commands.dotBanCommand(sender, hostname, message);
                     }
-                }else{
+                } else {
                     this.sendNotice(sender, "Bans module isn't enabled on the server, no addban.");
                 }
             }
             // .unban command
-            if (message.toLowerCase().startsWith(".unban")){
-                if (plugin.isBansEnabled){
-                    if (commands.hasAdminPrivileges(hostname)){
-                        String whoToUnban = message.substring(7);
-                        commands.dotUnbanCommand(sender, hostname, whoToUnban);
+            if (message.toLowerCase().startsWith(".unban")) {
+                if (this.plugin.isBansEnabled) {
+                    if (this.commands.hasAdminPrivileges(hostname)) {
+                        final String whoToUnban = message.substring(7);
+                        this.commands.dotUnbanCommand(sender, hostname, whoToUnban);
                     }
                 }
             }
         }
 
         // Admin chanel commands.
-        if (channel.equalsIgnoreCase(plugin.AdminChannel)) {
+        if (channel.equalsIgnoreCase(this.plugin.AdminChannel)) {
             // !has command
             if (MessageArray[0].equalsIgnoreCase("!has")) {
-                String player = MessageArray[1];
-                commands.HasCommand(player, channel);
+                final String player = MessageArray[1];
+                this.commands.HasCommand(player, channel);
             }
 
             // !admins command
             if (MessageArray[0].equalsIgnoreCase("!admins")) {
-                commands.AdminsCommandinPrivate(channel);
+                this.commands.AdminsCommandinPrivate(channel);
             }
 
             // !reports command
             if (message.equalsIgnoreCase("!reports")) {
-                HashSet<String> targets = new HashSet<String>();
+                final HashSet<String> targets = new HashSet<String>();
                 targets.add("ReportCall");
-                plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, "Request for reports. Message useless :3"));
+                this.plugin.getServer().getPluginManager().callEvent(new MessageEvent(targets, "Request for reports. Message useless :3"));
             }
-            
+
             //!playerlist command
-            if (message.equalsIgnoreCase("!playerlist")){
-                commands.PlayerListCommandInPrivate(channel);
+            if (message.equalsIgnoreCase("!playerlist")) {
+                this.commands.PlayerListCommandInPrivate(channel);
             }
-            
+
             //!players command
-            if (message.equalsIgnoreCase("!players")){
-                commands.PlayersCommandInPrivate(channel);
+            if (message.equalsIgnoreCase("!players")) {
+                this.commands.PlayersCommandInPrivate(channel);
             }
         }
 
     }
-    
+
     @Override
-    protected void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice){
-        if((sourceNick.equalsIgnoreCase("authserv") || sourceNick.equalsIgnoreCase("authServ@services.gamesurge.net")) && target.equalsIgnoreCase(this.getNick())){
-            plugin.getLogger().info("Authserv said this to me: " + notice);
-            if(notice.contains("Your hostmask is not valid for account ")){
-                this.sendMessage("AuthServ", "authcookie " + plugin.AuthservUsername);
-                plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
+    protected void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice) {
+        if ((sourceNick.equalsIgnoreCase("authserv") || sourceNick.equalsIgnoreCase("authServ@services.gamesurge.net")) && target.equalsIgnoreCase(this.getNick())) {
+            this.plugin.getLogger().info("Authserv said this to me: " + notice);
+            if (notice.contains("Your hostmask is not valid for account ")) {
+                this.sendMessage("AuthServ", "authcookie " + this.plugin.AuthservUsername);
+                this.plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
             }
         }
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        if(sender.equalsIgnoreCase("authserv") || sender.equalsIgnoreCase("authServ@services.gamesurge.net")){
-            plugin.getLogger().info("Authserv said this to me: " + message);
-            if(message.contains("Your hostmask is not valid for account")){
-                this.sendMessage("AuthServ", "authcookie " + plugin.AuthservUsername);
-                plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
+        if (sender.equalsIgnoreCase("authserv") || sender.equalsIgnoreCase("authServ@services.gamesurge.net")) {
+            this.plugin.getLogger().info("Authserv said this to me: " + message);
+            if (message.contains("Your hostmask is not valid for account")) {
+                this.sendMessage("AuthServ", "authcookie " + this.plugin.AuthservUsername);
+                this.plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
             }
         }
-        String[] MessageArray = message.split(" ");
+        final String[] MessageArray = message.split(" ");
         // playerlist command
         if (message.toLowerCase().equalsIgnoreCase("playerlist")) {
-            if(commands.hasAdminPrivileges(hostname)){
-                commands.PlayerListCommandInPrivate(sender);
-            }else{
-                commands.PlayerListCommandInPublic(sender);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                this.commands.PlayerListCommandInPrivate(sender);
+            } else {
+                this.commands.PlayerListCommandInPublic(sender);
             }
         }
         // players command
         if (message.toLowerCase().equalsIgnoreCase("players")) {
-            if(commands.hasAdminPrivileges(hostname)){
-                commands.PlayersCommandInPrivate(sender);
-            }else{
-                commands.PlayersCommandInPublic(sender);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                this.commands.PlayersCommandInPrivate(sender);
+            } else {
+                this.commands.PlayersCommandInPublic(sender);
             }
         }
         // !msg command
         if (MessageArray[0].equalsIgnoreCase("msg")) {
             String toSend = message.substring(4);
-            String toSendIRC = "[IRC] <" + sender + "> " + toSend;
+            final String toSendIRC = "[IRC] <" + sender + "> " + toSend;
             toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + toSend;
-            plugin.getServer().broadcastMessage(toSend);
-            this.sendMessage(plugin.NormalChannel, toSendIRC);
+            this.plugin.getServer().broadcastMessage(toSend);
+            this.sendMessage(this.plugin.NormalChannel, toSendIRC);
         }
         // kick command
         if (MessageArray[0].equalsIgnoreCase("kick")) {
-            if (commands.hasAdminPrivileges(hostname)) {
-                String[] args = message.substring(5).split(" ");
-                String partialplayer = args[0];
-                String reason = J2MC_Core.combineSplit(1, args, " ");
-                commands.dotKickCommand(partialplayer, reason, sender, hostname);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                final String[] args = message.substring(5).split(" ");
+                final String partialplayer = args[0];
+                final String reason = J2MC_Core.combineSplit(1, args, " ");
+                this.commands.dotKickCommand(partialplayer, reason, sender, hostname);
             }
         }
         // g command
         if (MessageArray[0].equalsIgnoreCase("g")) {
-            if (commands.hasAdminPrivileges(hostname)) {
-                String gmessage = message.substring(2);
-                commands.dotGCommand(hostname, gmessage, sender);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                final String gmessage = message.substring(2);
+                this.commands.dotGCommand(hostname, gmessage, sender);
             }
         }
         // a command
         if (MessageArray[0].equalsIgnoreCase("a")) {
-            if (commands.hasAdminPrivileges(hostname)) {
-                String Derp = message.substring(2);
-                commands.dotAcommand(hostname, Derp);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                final String Derp = message.substring(2);
+                this.commands.dotAcommand(hostname, Derp);
             }
         }
         // admins command
         if (MessageArray[0].equalsIgnoreCase("admins")) {
-            if (commands.hasAdminPrivileges(hostname)) {
-                commands.AdminsCommandinPrivate(sender);
-            }else{
-                commands.AdminsCommandinPublic(sender);
+            if (this.commands.hasAdminPrivileges(hostname)) {
+                this.commands.AdminsCommandinPrivate(sender);
+            } else {
+                this.commands.AdminsCommandinPublic(sender);
             }
         }
         // addban command
-        if (message.toLowerCase().startsWith("addban")){
-            if(plugin.isBansEnabled){
-                if (commands.hasAdminPrivileges(hostname)){
-                    commands.dotAddBanCommand(sender, hostname, message);
+        if (message.toLowerCase().startsWith("addban")) {
+            if (this.plugin.isBansEnabled) {
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    this.commands.dotAddBanCommand(sender, hostname, message);
                 }
-            }else{
+            } else {
                 this.sendMessage(sender, "Bans module isn't enabled on the server, no addban.");
             }
         }
         // ban command
-        if (message.toLowerCase().startsWith("ban")){
-            if (plugin.isBansEnabled){
-                if (commands.hasAdminPrivileges(hostname)){
-                    commands.dotBanCommand(sender, hostname, message);
+        if (message.toLowerCase().startsWith("ban")) {
+            if (this.plugin.isBansEnabled) {
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    this.commands.dotBanCommand(sender, hostname, message);
                 }
-            }else{
+            } else {
                 this.sendMessage(sender, "Bans module isn't enabled on the server, no addban.");
             }
         }
         // unban command
-        if (message.toLowerCase().startsWith("unban")){
-            if (plugin.isBansEnabled){
-                if (commands.hasAdminPrivileges(hostname)){
-                    String whoToUnban = message.substring(6);
-                    commands.dotUnbanCommand(sender, hostname, whoToUnban);
+        if (message.toLowerCase().startsWith("unban")) {
+            if (this.plugin.isBansEnabled) {
+                if (this.commands.hasAdminPrivileges(hostname)) {
+                    final String whoToUnban = message.substring(6);
+                    this.commands.dotUnbanCommand(sender, hostname, whoToUnban);
                 }
             }
         }

@@ -1,58 +1,49 @@
 package to.joe.j2mc.irc;
 
-import java.io.IOException;
-
 import org.bukkit.ChatColor;
-import org.jibble.pircbot.IrcException;
-import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircColors;
 
-public class IRCManager extends Thread{
+public class IRCManager extends Thread {
     J2MC_IRC plugin;
     public IRCBot bot;
     boolean noreturn = false;
-    
+
     public IRCManager(J2MC_IRC IRC) {
         this.plugin = IRC;
     }
 
-    public void disconnect() {
-        bot.disconnect();
-        noreturn = true;
-    }
-
     public void connect() {
-        bot = new IRCBot(plugin.nick, plugin, this);
+        this.bot = new IRCBot(this.plugin.nick, this.plugin, this);
         try {
-            plugin.getLogger().info(
-                    "Attempting connection to " + plugin.ServerHost + ":" + plugin.ServerPort);
-            if (plugin.bindToIP) {
-                bot.connect(plugin.ServerHost, plugin.ServerPort, plugin.BindIP);
+            this.plugin.getLogger().info("Attempting connection to " + this.plugin.ServerHost + ":" + this.plugin.ServerPort);
+            if (this.plugin.bindToIP) {
+                this.bot.connect(this.plugin.ServerHost, this.plugin.ServerPort, this.plugin.BindIP);
             } else {
-                bot.connectWithNoB(plugin.ServerHost, plugin.ServerPort, null);
+                this.bot.connectWithNoB(this.plugin.ServerHost, this.plugin.ServerPort, null);
             }
-        } catch (NickAlreadyInUseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IrcException e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
-        plugin.getLogger().info("Connected! Attempting to auth and join channels.");
-        bot.joinChannel(plugin.NormalChannel);
-        bot.sendMessage(plugin.NormalChannel, "Meow. I am alive");
-        plugin.getLogger().info("Attempting auth with " + plugin.AuthservUsername + " and " + plugin.AuthservPassword);
-        bot.sendMessage("authserv@services.gamesurge.net", "auth " + plugin.AuthservUsername + " " + plugin.AuthservPassword);
-        bot.sendMessage("Chanserv", "inviteme " + plugin.AdminChannel);
-        bot.sendMessage("Chanserv", "inviteme " + plugin.NormalChannel);
-        bot.joinChannel(plugin.AdminChannel);
+        this.plugin.getLogger().info("Connected! Attempting to auth and join channels.");
+        this.bot.joinChannel(this.plugin.NormalChannel);
+        this.bot.sendMessage(this.plugin.NormalChannel, "Meow. I am alive");
+        this.plugin.getLogger().info("Attempting auth with " + this.plugin.AuthservUsername + " and " + this.plugin.AuthservPassword);
+        this.bot.sendMessage("authserv@services.gamesurge.net", "auth " + this.plugin.AuthservUsername + " " + this.plugin.AuthservPassword);
+        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.AdminChannel);
+        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.NormalChannel);
+        this.bot.joinChannel(this.plugin.AdminChannel);
+    }
+
+    public void disconnect() {
+        this.bot.disconnect();
+        this.noreturn = true;
     }
 
     public void sendMessage(String message, boolean adminChannel) {
         if (adminChannel) {
-            bot.sendMessage(plugin.AdminChannel, this.colors(message));
+            this.bot.sendMessage(this.plugin.AdminChannel, this.colors(message));
         } else {
-            bot.sendMessage(plugin.NormalChannel, this.colors(message));
+            this.bot.sendMessage(this.plugin.NormalChannel, this.colors(message));
         }
     }
 
@@ -60,29 +51,19 @@ public class IRCManager extends Thread{
         message = message.replace(ChatColor.AQUA.toString(), PircColors.TEAL);
         message = message.replace(ChatColor.BLACK.toString(), PircColors.BLACK);
         message = message.replace(ChatColor.BLUE.toString(), PircColors.BLUE);
-        message = message.replace(ChatColor.DARK_AQUA.toString(),
-                PircColors.BLUE);
-        message = message.replace(ChatColor.DARK_BLUE.toString(),
-                PircColors.BLUE);
-        message = message.replace(ChatColor.DARK_GRAY.toString(),
-                PircColors.DARK_GRAY);
-        message = message.replace(ChatColor.DARK_GREEN.toString(),
-                PircColors.GREEN);
-        message = message.replace(ChatColor.DARK_PURPLE.toString(),
-                PircColors.PURPLE);
-        message = message
-                .replace(ChatColor.DARK_RED.toString(), PircColors.RED);
+        message = message.replace(ChatColor.DARK_AQUA.toString(), PircColors.BLUE);
+        message = message.replace(ChatColor.DARK_BLUE.toString(), PircColors.BLUE);
+        message = message.replace(ChatColor.DARK_GRAY.toString(), PircColors.DARK_GRAY);
+        message = message.replace(ChatColor.DARK_GREEN.toString(), PircColors.GREEN);
+        message = message.replace(ChatColor.DARK_PURPLE.toString(), PircColors.PURPLE);
+        message = message.replace(ChatColor.DARK_RED.toString(), PircColors.RED);
         message = message.replace(ChatColor.GOLD.toString(), PircColors.OLIVE);
-        message = message.replace(ChatColor.GRAY.toString(),
-                PircColors.DARK_GRAY);
+        message = message.replace(ChatColor.GRAY.toString(), PircColors.DARK_GRAY);
         message = message.replace(ChatColor.GREEN.toString(), PircColors.GREEN);
-        message = message.replace(ChatColor.LIGHT_PURPLE.toString(),
-                PircColors.MAGENTA);
+        message = message.replace(ChatColor.LIGHT_PURPLE.toString(), PircColors.MAGENTA);
         message = message.replace(ChatColor.RED.toString(), PircColors.RED);
-        message = message
-                .replace(ChatColor.WHITE.toString(), PircColors.NORMAL);
-        message = message.replace(ChatColor.YELLOW.toString(),
-                PircColors.YELLOW);
+        message = message.replace(ChatColor.WHITE.toString(), PircColors.NORMAL);
+        message = message.replace(ChatColor.YELLOW.toString(), PircColors.YELLOW);
         return message;
     }
 

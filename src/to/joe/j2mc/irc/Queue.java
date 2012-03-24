@@ -11,29 +11,30 @@ public class Queue extends TimerTask {
         this.plugin = plugin;
     }
 
+    @Override
     public void run() {
-        OutGoingMessages = 0;
+        this.OutGoingMessages = 0;
     }
 
     public void sendMessage(String message, String channel) {
         synchronized (this) {
-            OutGoingMessages++;
+            this.OutGoingMessages++;
         }
-        if (OutGoingMessages >= 10 && OutGoingMessages < 20) {
+        if ((this.OutGoingMessages >= 10) && (this.OutGoingMessages < 20)) {
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
             }
-            plugin.IRCManager.bot.sendMessage(channel, message);
-        } else if(OutGoingMessages >= 20) {
+            this.plugin.IRCManager.bot.sendMessage(channel, message);
+        } else if (this.OutGoingMessages >= 20) {
             try {
-                Thread.sleep(2000);                
-            } catch (InterruptedException e) {
+                Thread.sleep(2000);
+            } catch (final InterruptedException e) {
             }
-            plugin.IRCManager.bot.sendMessage(channel, message);
-  
+            this.plugin.IRCManager.bot.sendMessage(channel, message);
+
         } else {
-            plugin.IRCManager.bot.sendMessage(channel, message);
+            this.plugin.IRCManager.bot.sendMessage(channel, message);
         }
     }
 

@@ -6,28 +6,31 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import to.joe.j2mc.core.event.MessageEvent;;
+import to.joe.j2mc.core.event.MessageEvent;
 
-public class MesssageListener implements Listener{
-	
-	J2MC_IRC plugin;
-	public MesssageListener(J2MC_IRC IRC){
-		this.plugin = IRC;
-	}
-	
+;
+
+public class MesssageListener implements Listener {
+
+    J2MC_IRC plugin;
+
+    public MesssageListener(J2MC_IRC IRC) {
+        this.plugin = IRC;
+    }
+
     @EventHandler
     public void onIRCMessageEvent(MessageEvent event) {
-    	HashSet<String> targets = event.alltargets();
-    	for(String target : targets){
-    		if(target.equals("ADMININFO")){
-    			plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
-    		}else if(target.equals("GAMEMSG")){
-    			plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), plugin.NormalChannel);
-    		}else if(target.startsWith("SendNotice")){
-    		    String WhoToSend = target.split(" ")[1];
-    		    plugin.IRCManager.bot.sendNotice(WhoToSend, event.getMessage());
-    		}
-    	}
+        final HashSet<String> targets = event.alltargets();
+        for (final String target : targets) {
+            if (target.equals("ADMININFO")) {
+                this.plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
+            } else if (target.equals("GAMEMSG")) {
+                this.plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), this.plugin.NormalChannel);
+            } else if (target.startsWith("SendNotice")) {
+                final String WhoToSend = target.split(" ")[1];
+                this.plugin.IRCManager.bot.sendNotice(WhoToSend, event.getMessage());
+            }
+        }
     }
 
 }

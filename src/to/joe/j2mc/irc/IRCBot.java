@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.jibble.pircbot.PircBot;
 
 import to.joe.j2mc.core.J2MC_Core;
+import to.joe.j2mc.core.J2MC_Manager;
 import to.joe.j2mc.core.event.MessageEvent;
 
 public class IRCBot extends PircBot {
@@ -18,6 +19,9 @@ public class IRCBot extends PircBot {
         this.setName(nick);
         this.setAutoNickChange(true);
         this.setMessageDelay(1100);
+        this.setLogin("j2mc"+J2MC_Manager.getServerID());
+        this.setVersion("J2MC v"+j2mc_irc.getDescription().getVersion());
+        this.setFinger("Oh my.");
         this.plugin = j2mc_irc;
         this.manager = manager;
         this.commands = new IRCCommands(this, this.plugin);

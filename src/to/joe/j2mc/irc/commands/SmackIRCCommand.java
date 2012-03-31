@@ -17,11 +17,9 @@ public class SmackIRCCommand extends MasterCommand {
 
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
-        if (sender.hasPermission("j2mc.irc.management")) {
-            this.plugin.readData();
-            this.plugin.IRCManager.disconnect();
-            this.plugin.IRCManager.connect();
-        }
+        this.plugin.readData();
+        this.plugin.IRCManager.disconnect();
+        this.plugin.IRCManager.connect();
     }
 
 }

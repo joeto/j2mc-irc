@@ -8,9 +8,13 @@ commands:
   smackirc:
     description: reloads irc stuff
     usage: /smackirc
+    permission: j2mc.irc.management
+    permission-message: Chuck Testa
   ircmessage:
     description: send a message on irc to a user
     usage: /ircmessge user message
+    permission: j2mc.irc.management
+    permission-message: Chuck Testa
 permissions:
   j2mc.irc.management:
     description: gives access to /ircmessage and /smackirc

@@ -19,15 +19,13 @@ public class IRCMessageCommand extends MasterCommand {
 
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
-        if (sender.hasPermission("j2mc.irc.management")) {
-            if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /ircmessage target message");
-                return;
-            }
-            final String target = args[0];
-            final String message = J2MC_Core.combineSplit(1, args, " ");
-            this.plugin.IRCManager.bot.sendMessage(target, message);
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /ircmessage target message");
+            return;
         }
+        final String target = args[0];
+        final String message = J2MC_Core.combineSplit(1, args, " ");
+        this.plugin.IRCManager.bot.sendMessage(target, message);
     }
 
 }

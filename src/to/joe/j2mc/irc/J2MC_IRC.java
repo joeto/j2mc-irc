@@ -1,5 +1,9 @@
 package to.joe.j2mc.irc;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,15 +49,20 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getConfig().options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
+        
+        this.deployDefaultConfig();
         this.readData();
+        
         this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
         this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
+        
         this.IRCManager = new IRCManager(this);
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
         this.IRCManager.start();
         this.IRCManager.connect();
+        
         this.getLogger().info("IRC module enabled");
     }
 
@@ -106,6 +115,28 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
 
         if (this.getServer().getPluginManager().isPluginEnabled("J2MC_Bans")) {
             this.isBansEnabled = true;
+        }
+    }
+    
+    public void deployDefaultConfig() {
+        final File target = new File(this.getDataFolder(), "config.yml");
+        final InputStream source = this.getResource("config.yml");
+        if(!this.getDataFolder().exists()) {
+            this.getDataFolder().mkdir();
+        }
+        try{
+        if (!target.exists()) {
+            final OutputStream output = new FileOutputStream(target);
+            int len;
+            final byte[] buffer = new byte[1024];
+            while ((len = source.read(buffer)) > 0) {
+                output.write(buffer, 0, len);
+            }
+            output.close();
+        }
+        source.close();
+        }catch(final Exception ex) {
+            this.getLogger().warning("Exception while copying default config");
         }
     }
 

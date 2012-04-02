@@ -4,6 +4,7 @@ version: 1.0
 website: http://forums.joe.to
 author: J2 Minecraft Plugin Team
 description: IRC module
+softdepend: [J2MC_Core]
 commands:
   smackirc:
     description: reloads irc stuff

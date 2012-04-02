@@ -89,7 +89,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public void readData() {
         this.hosts = new HashMap<String, String>();
         try {
-            final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`='admin' OR `group`='srstaff' ");
+            final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `flags` LIKE '%a%'");
             final ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 final String user = rs.getString("name");

@@ -25,7 +25,7 @@ public class Queue extends TimerTask {
         synchronized (this) {
             this.OutGoingMessages++;
         }
-        if(this.messages.get(this.messages.size()).equals(message)){
+        if(this.messages.get(this.messages.size() - 1).equals(message)){
             synchronized (this) {
                 this.SimilarMessagesOut++;
             }

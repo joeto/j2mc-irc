@@ -49,20 +49,20 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getConfig().options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
-        
+
         this.deployDefaultConfig();
         this.readData();
-        
+
         this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
         this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
-        
+
         this.IRCManager = new IRCManager(this);
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
         this.IRCManager.start();
         this.IRCManager.connect();
-        
+
         this.getLogger().info("IRC module enabled");
     }
 
@@ -74,7 +74,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
             if (event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")) {
                 this.IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
             }
-            if (event.getMessage().contains("_____##___##") || event.getMessage().contains("_-_-_-_-_-_-_-''    ''")) {
+            if (event.getMessage().contains("_____##___##") || event.getMessage().contains("_-_-_-_-_-_-_-''    ''") || event.getMessage().contains("-_-_-_-_-_-_-_,------,")) {
                 if (this.isBansEnabled) {
                     final String toSend = "BobTheHAXXXXXXguy:" + event.getPlayer().getName() + ":spam hacks:ammar2";
                     this.getServer().getPluginManager().callEvent(new MessageEvent(MessageEvent.compile("NEWADDBAN"), toSend));
@@ -117,25 +117,25 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
             this.isBansEnabled = true;
         }
     }
-    
+
     public void deployDefaultConfig() {
         final File target = new File(this.getDataFolder(), "config.yml");
         final InputStream source = this.getResource("config.yml");
-        if(!this.getDataFolder().exists()) {
+        if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdir();
         }
-        try{
-        if (!target.exists()) {
-            final OutputStream output = new FileOutputStream(target);
-            int len;
-            final byte[] buffer = new byte[1024];
-            while ((len = source.read(buffer)) > 0) {
-                output.write(buffer, 0, len);
+        try {
+            if (!target.exists()) {
+                final OutputStream output = new FileOutputStream(target);
+                int len;
+                final byte[] buffer = new byte[1024];
+                while ((len = source.read(buffer)) > 0) {
+                    output.write(buffer, 0, len);
+                }
+                output.close();
             }
-            output.close();
-        }
-        source.close();
-        }catch(final Exception ex) {
+            source.close();
+        } catch (final Exception ex) {
             this.getLogger().warning("Exception while copying default config");
         }
     }

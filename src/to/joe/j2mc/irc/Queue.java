@@ -33,7 +33,7 @@ public class Queue extends TimerTask {
             }
         }
         this.messages.add(message);
-        if (this.SimilarMessagesOut <= 7){
+        if (this.SimilarMessagesOut >= 7){
             return;
         }
         if ((this.OutGoingMessages >= 10) && (this.OutGoingMessages < 20)) {

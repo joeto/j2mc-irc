@@ -91,7 +91,7 @@ public class IRCBot extends PircBot {
             if (MessageArray[0].equalsIgnoreCase(".a")) {
                 if (this.commands.hasAdminPrivileges(hostname)) {
                     final String Derp = message.substring(3);
-                    this.commands.dotAcommand(hostname, Derp);
+                    this.commands.dotAcommand(hostname, Derp, sender);
                 }
             }
 
@@ -234,7 +234,7 @@ public class IRCBot extends PircBot {
         if (MessageArray[0].equalsIgnoreCase("a")) {
             if (this.commands.hasAdminPrivileges(hostname)) {
                 final String Derp = message.substring(2);
-                this.commands.dotAcommand(hostname, Derp);
+                this.commands.dotAcommand(hostname, Derp, sender);
             }
         }
         // admins command

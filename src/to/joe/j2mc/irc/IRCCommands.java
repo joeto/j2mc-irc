@@ -56,9 +56,10 @@ public class IRCCommands {
         }
     }
 
-    public void dotAcommand(String hostname, String message) {
+    public void dotAcommand(String hostname, String message, String sender) {
         final String broadcastmessage = "<" + ChatColor.LIGHT_PURPLE + this.plugin.hosts.get(hostname) + ChatColor.WHITE + "> " + message;
         J2MC_Manager.getCore().adminAndLog(broadcastmessage);
+        this.bot.sendNotice(sender, "Message sent!");
     }
 
     public void dotAddBanCommand(String sender, String hostname, String message) {

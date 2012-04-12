@@ -10,3 +10,4 @@ channels:
 authserv:
   username: derp
   password: lol
+commandgroups: ['admins', 'srstaff']

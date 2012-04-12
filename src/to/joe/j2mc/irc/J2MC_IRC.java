@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 
 import org.bukkit.event.EventHandler;
@@ -37,6 +39,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public String AuthservUsername;
     public String AuthservPassword;
     public boolean isBansEnabled = false;
+    public List<String> AdminGroups;
 
     @Override
     public void onDisable() {
@@ -87,19 +90,24 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     }
 
     public void readData() {
+        this.AdminGroups = this.getConfig().getStringList("commandgroups");
+        
         this.hosts = new HashMap<String, String>();
-        try {
-            final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `flags` LIKE '%a%'");
-            final ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                final String user = rs.getString("name");
-                final String host = rs.getString("IRChost");
-                this.hosts.put(host, user);
+        for (String group : this.AdminGroups) {
+            try {
+                final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`=?");
+                ps.setString(1, group);
+                final ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    final String user = rs.getString("name");
+                    final String host = rs.getString("IRChost");
+                    this.hosts.put(host, user);
+                }
+            } catch (final SQLException e) {
+                e.printStackTrace();
+            } catch (final ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (final SQLException e) {
-            e.printStackTrace();
-        } catch (final ClassNotFoundException e) {
-            e.printStackTrace();
         }
         this.ServerHost = this.getConfig().getString("server.host");
         this.ServerPort = this.getConfig().getInt("server.port");

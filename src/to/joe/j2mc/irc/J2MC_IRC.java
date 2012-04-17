@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -51,7 +50,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public void onEnable() {
         this.getConfig().options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(this, this);
-        this.getServer().getPluginManager().registerEvents(new MesssageListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new MessageListener(this), this);
 
         this.deployDefaultConfig();
         this.readData();

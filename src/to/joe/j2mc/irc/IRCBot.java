@@ -26,6 +26,13 @@ public class IRCBot extends PircBot {
         this.manager = manager;
         this.commands = new IRCCommands(this, this.plugin);
     }
+    
+    @Override
+    public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
+        if (sourceNick.equalsIgnoreCase(this.getNick())){
+            this.plugin.getLogger().info("Quit IRC for reason: " + reason);
+        }
+    }
 
     @Override
     public void onDisconnect() {

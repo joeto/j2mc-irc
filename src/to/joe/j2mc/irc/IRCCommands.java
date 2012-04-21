@@ -215,9 +215,9 @@ public class IRCCommands {
         }
         String toSend;
         if (vanished == 1) {
-            toSend = "Currently " + players + " out of " + this.plugin.getServer().getMaxPlayers() + " on the server. 1 player is vanished";
+            toSend = "Currently " + players + " out of " + this.plugin.getServer().getMaxPlayers() + " on the server. 1 player invisible.";
         } else {
-            toSend = "Currently " + players + " out of " + this.plugin.getServer().getMaxPlayers() + " on the server. " + vanished + " players are vanished";
+            toSend = "Currently " + players + " out of " + this.plugin.getServer().getMaxPlayers() + " on the server. " + vanished + " players invisible";
         }
         this.bot.sendMessage(channel, toSend);
     }

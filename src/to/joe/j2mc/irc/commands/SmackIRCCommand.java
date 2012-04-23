@@ -18,8 +18,16 @@ public class SmackIRCCommand extends MasterCommand {
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
         this.plugin.readData();
+        if ((args.length > 0) && args[0].equalsIgnoreCase("settingsonly")) {
+            return;
+        }
         this.plugin.IRCManager.disconnect();
-        this.plugin.IRCManager.connect();
+        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
+            @Override
+            public void run() {
+                plugin.IRCManager.connect();
+            }
+        }, 100L);
     }
 
 }

@@ -120,7 +120,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.AuthservUsername = this.getConfig().getString("authserv.username");
         this.AuthservPassword = this.getConfig().getString("authserv.password");
 
-        if (this.getServer().getPluginManager().isPluginEnabled("J2MC_Bans")) {
+        if (this.getServer().getPluginManager().isPluginEnabled("Bans")) {
             this.isBansEnabled = true;
         }
     }

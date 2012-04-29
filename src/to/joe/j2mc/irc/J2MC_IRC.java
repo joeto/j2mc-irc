@@ -50,7 +50,6 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        this.mainThread = Thread.currentThread();
         this.getConfig().options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new MessageListener(this), this);
@@ -65,7 +64,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
-        this.timer.schedule(new UptimeNagger(this), 120000, 120000);
+        //this.timer.schedule(new UptimeNagger(this), 120000, 120000);
         this.IRCManager.start();
         this.IRCManager.connect();
         
@@ -149,6 +148,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         } catch (final Exception ex) {
             this.getLogger().warning("Exception while copying default config");
         }
+    }
+    
+    public void refreshMain() {
+        this.mainThread = Thread.currentThread();
     }
 
 }

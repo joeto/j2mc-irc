@@ -61,6 +61,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getCommand("smackirc").setExecutor(new SmackIRCCommand(this));
         this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
 
+        this.lastUp = 0L;
         this.IRCManager = new IRCManager(this);
         this.queue = new Queue(this);
         this.timer = new Timer();

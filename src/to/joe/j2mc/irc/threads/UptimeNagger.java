@@ -15,11 +15,9 @@ public class UptimeNagger extends TimerTask{
     
     @Override
     public void run() {
-        plugin.refreshMain();
-        if ((plugin.mainThread.isAlive() || plugin.mainThread.isInterrupted()) && nagged < 3) {
-            plugin.IRCManager.bot.sendMessage(plugin.AdminChannel, "Eviltechie: mbaxter: ammar2: I am down, my main thread isn't alive or is intterupted");
+        if((System.currentTimeMillis() - this.plugin.lastUp > 10000) && nagged <3)
+            plugin.IRCManager.bot.sendMessage(plugin.AdminChannel, "Eviltechie: mbaxter: ammar2: Please confirm that I am not down (and do something about it :D)");
             this.nagged++;
-        }
     }
 
 }

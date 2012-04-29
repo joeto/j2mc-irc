@@ -22,6 +22,7 @@ import to.joe.j2mc.irc.commands.IRCMessageCommand;
 import to.joe.j2mc.irc.commands.SmackIRCCommand;
 import to.joe.j2mc.irc.threads.Queue;
 import to.joe.j2mc.irc.threads.UptimeNagger;
+import to.joe.j2mc.irc.threads.UptimeSetter;
 
 public class J2MC_IRC extends JavaPlugin implements Listener {
 
@@ -40,7 +41,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public String AuthservPassword;
     public boolean isBansEnabled = false;
     public List<String> AdminGroups;
-    public Thread mainThread;
+    public long lastUp;
 
     @Override
     public void onDisable() {
@@ -64,7 +65,8 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
-        //this.timer.schedule(new UptimeNagger(this), 120000, 120000);
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UptimeSetter(this), 20L, 20L);
+        this.timer.schedule(new UptimeNagger(this), 60000, 60000);
         this.IRCManager.start();
         this.IRCManager.connect();
         
@@ -148,10 +150,6 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         } catch (final Exception ex) {
             this.getLogger().warning("Exception while copying default config");
         }
-    }
-    
-    public void refreshMain() {
-        this.mainThread = Thread.currentThread();
     }
 
 }

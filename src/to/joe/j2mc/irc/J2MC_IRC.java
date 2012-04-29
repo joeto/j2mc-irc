@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +20,8 @@ import to.joe.j2mc.core.J2MC_Manager;
 import to.joe.j2mc.core.event.MessageEvent;
 import to.joe.j2mc.irc.commands.IRCMessageCommand;
 import to.joe.j2mc.irc.commands.SmackIRCCommand;
+import to.joe.j2mc.irc.threads.Queue;
+import to.joe.j2mc.irc.threads.UptimeNagger;
 
 public class J2MC_IRC extends JavaPlugin implements Listener {
 
@@ -39,6 +40,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public String AuthservPassword;
     public boolean isBansEnabled = false;
     public List<String> AdminGroups;
+    public Thread mainThread;
 
     @Override
     public void onDisable() {
@@ -48,6 +50,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        this.mainThread = Thread.currentThread();
         this.getConfig().options().copyDefaults(true);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new MessageListener(this), this);
@@ -62,9 +65,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
+        this.timer.schedule(new UptimeNagger(this), 120000, 120000);
         this.IRCManager.start();
         this.IRCManager.connect();
-
+        
         this.getLogger().info("IRC module enabled");
     }
 

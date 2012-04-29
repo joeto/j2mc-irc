@@ -1,10 +1,10 @@
 name: IRC
 main: to.joe.j2mc.irc.J2MC_IRC
 version: 1.0
+depend: [Core]
 website: http://forums.joe.to
 author: J2 Minecraft Plugin Team
 description: IRC module
-softdepend: [J2MC_Core]
 commands:
   smackirc:
     description: reloads irc stuff

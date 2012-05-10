@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.jibble.pircbot.PircColors;
 
 public class IRCManager extends Thread {
+    
     J2MC_IRC plugin;
     public IRCBot bot;
     boolean noreturn = false;
@@ -13,6 +14,7 @@ public class IRCManager extends Thread {
     }
 
     public void connect() {
+        this.noreturn = false;
         this.bot = new IRCBot(this.plugin.nick, this.plugin, this);
         try {
             this.plugin.getLogger().info("Attempting connection to " + this.plugin.ServerHost + ":" + this.plugin.ServerPort);
@@ -35,9 +37,9 @@ public class IRCManager extends Thread {
     }
 
     public void disconnect() {
+        this.noreturn = true;
         this.bot.quitServer("SHUT. DOWN. EVERYTHING.");
         this.bot.disconnect();
-        this.noreturn = true;
     }
 
     public void sendMessage(String message, boolean adminChannel) {

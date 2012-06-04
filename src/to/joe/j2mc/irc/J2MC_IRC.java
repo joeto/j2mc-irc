@@ -10,9 +10,12 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
+
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -92,6 +95,20 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
                 }
             }
         }
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSignChange(SignChangeEvent event) {
+    	boolean bad = false;
+    	for (String line : event.getLines()) {
+    		if (line.toLowerCase().contains("fag") || (line.toLowerCase().contains("nigg"))) {
+    			bad = true;
+    		}
+    	}
+    	if (bad) {
+    		Location loc = event.getBlock().getLocation();
+			this.IRCManager.sendMessage(event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!", true);
+    	}
     }
 
     public void readData() {

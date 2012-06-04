@@ -4,20 +4,21 @@ import java.util.TimerTask;
 
 import to.joe.j2mc.irc.J2MC_IRC;
 
-public class UptimeNagger extends TimerTask{
+public class UptimeNagger extends TimerTask {
 
     J2MC_IRC plugin;
     int nagged = 0;
-    
-    public UptimeNagger(J2MC_IRC plugin){
+
+    public UptimeNagger(J2MC_IRC plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public void run() {
-        if((System.currentTimeMillis() - this.plugin.lastUp > 10000) && nagged <3)
-            plugin.IRCManager.bot.sendMessage(plugin.AdminChannel, "Eviltechie: mbaxter: ammar2: Please confirm that I am not down (and do something about it :D)");
-            this.nagged++;
+        if (((System.currentTimeMillis() - this.plugin.lastUp) > 10000) && (this.nagged < 3)) {
+            this.plugin.IRCManager.bot.sendMessage(this.plugin.AdminChannel, "Eviltechie: mbaxter: ammar2: Please confirm that I am not down (and do something about it :D)");
+        }
+        this.nagged++;
     }
 
 }

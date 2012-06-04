@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.jibble.pircbot.PircColors;
 
 public class IRCManager extends Thread {
-    
+
     J2MC_IRC plugin;
     public IRCBot bot;
     boolean noreturn = false;

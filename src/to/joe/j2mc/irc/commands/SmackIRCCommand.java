@@ -25,7 +25,7 @@ public class SmackIRCCommand extends MasterCommand {
         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
             @Override
             public void run() {
-                plugin.IRCManager.connect();
+                SmackIRCCommand.this.plugin.IRCManager.connect();
             }
         }, 100L);
     }

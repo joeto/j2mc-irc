@@ -73,7 +73,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.timer.schedule(new UptimeNagger(this), 60000, 60000);
         this.IRCManager.start();
         this.IRCManager.connect();
-        
+
         this.getLogger().info("IRC module enabled");
     }
 
@@ -96,26 +96,26 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
-    	boolean bad = false;
-    	for (String line : event.getLines()) {
-    		if (line.toLowerCase().contains("fag") || (line.toLowerCase().contains("nigg"))) {
-    			bad = true;
-    		}
-    	}
-    	if (bad) {
-    		Location loc = event.getBlock().getLocation();
-			this.IRCManager.sendMessage(event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!", true);
-    	}
+        boolean bad = false;
+        for (final String line : event.getLines()) {
+            if (line.toLowerCase().contains("fag") || (line.toLowerCase().contains("nigg"))) {
+                bad = true;
+            }
+        }
+        if (bad) {
+            final Location loc = event.getBlock().getLocation();
+            this.IRCManager.sendMessage(event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!", true);
+        }
     }
 
     public void readData() {
         this.AdminGroups = this.getConfig().getStringList("commandgroups");
-        
+
         this.hosts = new HashMap<String, String>();
-        for (String group : this.AdminGroups) {
+        for (final String group : this.AdminGroups) {
             try {
                 final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`=?");
                 ps.setString(1, group);

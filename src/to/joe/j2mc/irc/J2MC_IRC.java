@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -107,7 +108,9 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         }
         if (bad) {
             final Location loc = event.getBlock().getLocation();
-            this.IRCManager.sendMessage(event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!", true);
+            final String msg = event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!";
+            this.IRCManager.sendMessage(msg, true);
+            J2MC_Manager.getCore().adminAndLog(ChatColor.RED + msg);
         }
     }
 

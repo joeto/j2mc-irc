@@ -101,14 +101,19 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
         boolean bad = false;
+        int index = 0;
         for (final String line : event.getLines()) {
             if (line.toLowerCase().contains("fag") || (line.toLowerCase().contains("nigg"))) {
                 bad = true;
+                break;
+            } else {
+                index++;
             }
         }
         if (bad) {
+            String message = event.getLines()[index];
             final Location loc = event.getBlock().getLocation();
-            final String msg = event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "!";
+            final String msg = event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "! Line: \"" + message + "\"";
             this.IRCManager.sendMessage(msg, true);
             J2MC_Manager.getCore().adminAndLog(ChatColor.RED + msg);
         }

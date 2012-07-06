@@ -86,7 +86,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
             if (event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")) {
                 this.IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
             }
-            if (event.getMessage().contains("_____##___##") || event.getMessage().contains("_-_-_-_-_-_-_-''    ''") || event.getMessage().contains("-_-_-_-_-_-_-_,------,")) {
+            if (event.getMessage().contains("_____##___##") || event.getMessage().contains("_-_-_-_-_-_-_-''    ''") || event.getMessage().contains("-_-_-_-_-_-_-_,------,") || event.getMessage().contains("##___#######")) {
                 if (this.isBansEnabled) {
                     final String toSend = "BobTheHAXXXXXXguy:" + event.getPlayer().getName() + ":spam hacks:ammar2";
                     this.getServer().getPluginManager().callEvent(new MessageEvent(MessageEvent.compile("NEWADDBAN"), toSend));

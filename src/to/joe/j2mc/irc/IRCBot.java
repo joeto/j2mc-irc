@@ -36,9 +36,7 @@ public class IRCBot extends PircBot {
 
     @Override
     public void onDisconnect() {
-        if (!this.manager.noreturn) {
-            this.manager.connect();
-        }
+        this.manager.connect();
     }
 
     @Override

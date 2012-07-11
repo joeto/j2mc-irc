@@ -7,15 +7,18 @@ public class IRCManager extends Thread {
 
     J2MC_IRC plugin;
     public IRCBot bot;
-    boolean noreturn = false;
 
     public IRCManager(J2MC_IRC IRC) {
         this.plugin = IRC;
     }
+    
+    @Override
+    public void run() {
+        this.bot = new IRCBot(this.plugin.nick, this.plugin, this);
+        this.connect();   
+    }
 
     public void connect() {
-        this.noreturn = false;
-        this.bot = new IRCBot(this.plugin.nick, this.plugin, this);
         try {
             this.plugin.getLogger().info("Attempting connection to " + this.plugin.ServerHost + ":" + this.plugin.ServerPort);
             if (this.plugin.bindToIP) {
@@ -37,9 +40,7 @@ public class IRCManager extends Thread {
     }
 
     public void disconnect() {
-        this.noreturn = true;
         this.bot.quitServer("SHUT. DOWN. EVERYTHING.");
-        this.bot.disconnect();
     }
 
     public void sendMessage(String message, boolean adminChannel) {

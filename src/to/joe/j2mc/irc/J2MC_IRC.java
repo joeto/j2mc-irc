@@ -73,7 +73,6 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UptimeSetter(this), 20L, 20L);
         this.timer.schedule(new UptimeNagger(this), 60000, 60000);
         this.IRCManager.start();
-        this.IRCManager.connect();
 
         this.getLogger().info("IRC module enabled");
     }

@@ -11,17 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.core.J2MC_Manager;
-import to.joe.j2mc.core.event.MessageEvent;
 import to.joe.j2mc.irc.commands.IRCMessageCommand;
 import to.joe.j2mc.irc.commands.SmackIRCCommand;
 import to.joe.j2mc.irc.threads.Queue;
@@ -82,35 +78,6 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         if (!event.isCancelled()) {
             final String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
             this.queue.sendMessage(message, this.NormalChannel);
-            if (event.getMessage().toLowerCase().contains("fag") || event.getMessage().toLowerCase().contains("nigg")) {
-                this.IRCManager.sendMessage("Watch " + event.getPlayer().getName() + " for language: " + event.getMessage(), true);
-            }
-            if (event.getMessage().contains("_____##___##") || event.getMessage().contains("_-_-_-_-_-_-_-''    ''") || event.getMessage().contains("-_-_-_-_-_-_-_,------,") || event.getMessage().contains("##___#######")) {
-                if (this.isBansEnabled) {
-                    final String toSend = "BobTheHAXXXXXXguy:" + event.getPlayer().getName() + ":spam hacks:ammar2";
-                    this.getServer().getPluginManager().callEvent(new MessageEvent(MessageEvent.compile("NEWADDBAN"), toSend));
-                    this.IRCManager.sendMessage("Banned " + event.getPlayer().getName() + " for using nyancraft", true);
-                } else {
-                    this.IRCManager.sendMessage("Check out " + event.getPlayer().getName() + ", he is probably using spam hacks (nyancraft)", true);
-                }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onSignChange(SignChangeEvent event) {
-        String bad = null;
-        for (final String line : event.getLines()) {
-            if (line.toLowerCase().contains("fag") || (line.toLowerCase().contains("nigg"))) {
-                bad = line;
-                break;
-            }
-        }
-        if (bad!=null) {
-            final Location loc = event.getBlock().getLocation();
-            final String msg = event.getPlayer().getName() + " created a bad sign @ X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "! Line: \"" + bad + "\"";
-            this.IRCManager.sendMessage(msg, true);
-            J2MC_Manager.getCore().adminAndLog(ChatColor.RED + msg);
         }
     }
 

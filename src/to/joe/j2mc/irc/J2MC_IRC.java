@@ -14,7 +14,7 @@ import java.util.Timer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.core.J2MC_Manager;
@@ -74,7 +74,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onMessage(PlayerChatEvent event) {
+    public void onMessage(AsyncPlayerChatEvent event) {
         if (!event.isCancelled()) {
             final String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
             this.queue.sendMessage(message, this.NormalChannel);

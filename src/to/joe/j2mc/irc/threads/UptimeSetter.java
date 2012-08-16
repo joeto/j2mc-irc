@@ -1,5 +1,10 @@
 package to.joe.j2mc.irc.threads;
 
+import java.io.IOException;
+
+import org.jibble.pircbot.IrcException;
+import org.jibble.pircbot.NickAlreadyInUseException;
+
 import to.joe.j2mc.irc.J2MC_IRC;
 
 public class UptimeSetter implements Runnable {
@@ -13,6 +18,16 @@ public class UptimeSetter implements Runnable {
     @Override
     public void run() {
         this.plugin.lastUp = System.currentTimeMillis();
+        if (!this.plugin.IRCManager.bot.isConnected()) {
+            try {
+                this.plugin.IRCManager.bot.reconnect();
+            } catch (NickAlreadyInUseException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (IrcException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

@@ -98,8 +98,6 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
                 }
             } catch (final SQLException e) {
                 e.printStackTrace();
-            } catch (final ClassNotFoundException e) {
-                e.printStackTrace();
             }
         }
         this.ServerHost = this.getConfig().getString("server.host");

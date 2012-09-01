@@ -75,12 +75,10 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getLogger().info("IRC module enabled");
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
     public void onMessage(AsyncPlayerChatEvent event) {
-        if (!event.isCancelled()) {
-            final String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
-            this.queue.sendMessage(message, this.NormalChannel);
-        }
+        final String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
+        this.queue.sendMessage(message, this.NormalChannel);
     }
 
     public void readData() {

@@ -18,16 +18,6 @@ public class UptimeSetter implements Runnable {
     @Override
     public void run() {
         this.plugin.lastUp = System.currentTimeMillis();
-        if (!this.plugin.IRCManager.bot.isConnected()) {
-            try {
-                this.plugin.IRCManager.bot.reconnect();
-            } catch (NickAlreadyInUseException e) {
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IrcException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

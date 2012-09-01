@@ -1,6 +1,10 @@
 package to.joe.j2mc.irc.threads;
 
+import java.io.IOException;
 import java.util.TimerTask;
+
+import org.jibble.pircbot.IrcException;
+import org.jibble.pircbot.NickAlreadyInUseException;
 
 import to.joe.j2mc.irc.J2MC_IRC;
 
@@ -19,6 +23,16 @@ public class UptimeNagger extends TimerTask {
             this.plugin.IRCManager.bot.sendMessage(this.plugin.AdminChannel, "Eviltechie: mbaxter: ammar2: Please confirm that I am not down (and do something about it :D)");
         }
         this.nagged++;
+        if (!this.plugin.IRCManager.bot.isConnected()) {
+            try {
+                this.plugin.IRCManager.bot.reconnect();
+            } catch (NickAlreadyInUseException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (IrcException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

@@ -46,6 +46,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         this.timer.cancel();
+        this.getServer().getScheduler().cancelTasks(this);
         this.IRCManager.disconnect();
         this.getLogger().info("IRC module disabled");
     }

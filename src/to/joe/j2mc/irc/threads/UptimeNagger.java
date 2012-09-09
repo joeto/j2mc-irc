@@ -25,12 +25,9 @@ public class UptimeNagger extends TimerTask {
         this.nagged++;
         if (!this.plugin.IRCManager.bot.isConnected()) {
             try {
-                this.plugin.IRCManager.bot.reconnect();
-            } catch (NickAlreadyInUseException e) {
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IrcException e) {
-                e.printStackTrace();
+                this.plugin.IRCManager.connect();
+            } catch (Exception e) {
+                
             }
         }
     }

@@ -140,10 +140,17 @@ public class IRCCommands {
     }
 
     public void HasCommand(String player, String Channel) {
+        boolean iHas = false;
         for (final Player plr : J2MC_Manager.getVisibility().getOnlinePlayers(null)) {
             if (player.equalsIgnoreCase(plr.getName())) {
-                this.bot.sendMessage(Channel, "I has " + player);
+                iHas = true;
             }
+        }
+        
+        if (iHas) {
+            this.bot.sendMessage(Channel, "I has " + player);
+        } else {
+            this.bot.sendMessage(Channel, "I do not has " + player);
         }
     }
 

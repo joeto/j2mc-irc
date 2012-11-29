@@ -34,7 +34,11 @@ public class IRCCommands {
             toSend = "Admins: ";
             for (final Player plr : this.plugin.getServer().getOnlinePlayers()) {
                 if (plr.hasPermission("j2mc.core.admin")) {
-                    toSend = toSend + plr.getName() + ", ";
+                    String name = plr.getName();
+                    if (name.equals("untamed")) {
+                        name = "untaemd";
+                    }
+                    toSend = toSend + name + ", ";
                 }
             }
             toSend = toSend.substring(0, toSend.length() - 2);
@@ -166,10 +170,14 @@ public class IRCCommands {
         builder.append(toSend);
         if (this.plugin.getServer().getOnlinePlayers().length != 0) {
             for (final Player plr : this.plugin.getServer().getOnlinePlayers()) {
+                String name = plr.getName();
+                if (name.equals("untamed")) {
+                    name = "untaemd";
+                }
                 if (J2MC_Manager.getVisibility().isVanished(plr)) {
-                    builder.append(plr.getName() + "[V], ");
+                    builder.append(name + "[V], ");
                 } else {
-                    builder.append(plr.getName() + ", ");
+                    builder.append(name + ", ");
                 }
             }
             toSend = builder.toString();
@@ -193,7 +201,11 @@ public class IRCCommands {
         if (players != 0) {
             for (final Player plr : this.plugin.getServer().getOnlinePlayers()) {
                 if (!J2MC_Manager.getVisibility().isVanished(plr)) {
-                    builder.append(plr.getName() + ", ");
+                    String name = plr.getName();
+                    if (name.equals("untamed")) {
+                        name = "untaemd";
+                    }
+                    builder.append(name + ", ");
                 }
             }
             toSend = builder.toString();

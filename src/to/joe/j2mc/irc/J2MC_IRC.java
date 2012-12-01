@@ -65,6 +65,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
 
         this.lastUp = 0L;
         this.IRCManager = new IRCManager(this);
+        this.IRCManager.setDaemon(true);
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);

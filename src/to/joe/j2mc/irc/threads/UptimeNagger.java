@@ -1,10 +1,6 @@
 package to.joe.j2mc.irc.threads;
 
-import java.io.IOException;
 import java.util.TimerTask;
-
-import org.jibble.pircbot.IrcException;
-import org.jibble.pircbot.NickAlreadyInUseException;
 
 import to.joe.j2mc.irc.J2MC_IRC;
 

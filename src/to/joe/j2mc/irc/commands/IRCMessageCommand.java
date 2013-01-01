@@ -8,13 +8,10 @@ import to.joe.j2mc.core.J2MC_Core;
 import to.joe.j2mc.core.command.MasterCommand;
 import to.joe.j2mc.irc.J2MC_IRC;
 
-public class IRCMessageCommand extends MasterCommand {
-
-    J2MC_IRC plugin;
+public class IRCMessageCommand extends MasterCommand<J2MC_IRC> {
 
     public IRCMessageCommand(J2MC_IRC IRC) {
         super(IRC);
-        this.plugin = IRC;
     }
 
     @Override

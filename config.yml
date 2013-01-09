@@ -10,5 +10,5 @@ channels:
 authserv:
   username: derp
   password: lol
-announce_flow: true
+announce_flow: false
 commandgroups: ['admins', 'srstaff']

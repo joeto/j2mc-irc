@@ -31,13 +31,6 @@
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.kitteh</groupId>
-      <artifactId>VanishNoPacket</artifactId>
-      <version>3.14.2</version>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
   </dependencies>
 
   <build>

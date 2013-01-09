@@ -11,11 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kitteh.vanish.VanishPerms;
 
 import to.joe.j2mc.core.J2MC_Manager;
 import to.joe.j2mc.irc.commands.IRCMessageCommand;
@@ -39,6 +43,7 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public String AdminChannel;
     public String AuthservUsername;
     public String AuthservPassword;
+    public boolean AnnounceFlow;
     public boolean isBansEnabled = false;
     public List<String> AdminGroups;
     public long lastUp;
@@ -82,6 +87,18 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.queue.sendMessage(message, this.NormalChannel);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onJoin(PlayerJoinEvent event) {
+        if (this.AnnounceFlow && !VanishPerms.joinWithoutAnnounce(event.getPlayer()))
+            this.queue.sendMessage(ChatColor.stripColor(event.getJoinMessage()), this.NormalChannel);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onQuit(PlayerQuitEvent event) {
+        if (this.AnnounceFlow && !J2MC_Manager.getVisibility().isVanished(event.getPlayer()))
+            this.queue.sendMessage(ChatColor.stripColor(event.getQuitMessage()), this.NormalChannel);
+    }
+
     public void readData() {
         this.AdminGroups = this.getConfig().getStringList("commandgroups");
 
@@ -111,6 +128,8 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
 
         this.AuthservUsername = this.getConfig().getString("authserv.username");
         this.AuthservPassword = this.getConfig().getString("authserv.password");
+
+        this.AnnounceFlow = this.getConfig().getBoolean("announce_flow", true);
 
         if (this.getServer().getPluginManager().isPluginEnabled("Bans")) {
             this.isBansEnabled = true;

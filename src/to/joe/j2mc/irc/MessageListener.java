@@ -23,12 +23,12 @@ public class MessageListener implements Listener {
         final HashSet<String> targets = event.alltargets();
         for (final String target : targets) {
             if (target.equals("ADMININFO")) {
-                this.plugin.IRCManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
+                this.plugin.ircManager.sendMessage(ChatColor.stripColor(event.getMessage()), true);
             } else if (target.equals("GAMEMSG")) {
-                this.plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), this.plugin.NormalChannel);
+                this.plugin.queue.sendMessage(ChatColor.stripColor(event.getMessage()), this.plugin.normalChannel);
             } else if (target.startsWith("SendNotice")) {
                 final String WhoToSend = target.split(" ")[1];
-                this.plugin.IRCManager.bot.sendNotice(WhoToSend, event.getMessage());
+                this.plugin.ircManager.bot.sendNotice(WhoToSend, event.getMessage());
             }
         }
     }

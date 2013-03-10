@@ -11,9 +11,9 @@ import to.joe.j2mc.core.event.MessageEvent;
 
 public class IRCBot extends PircBot {
 
-    J2MC_IRC plugin;
-    IRCCommands commands;
-    IRCManager manager;
+    private J2MC_IRC plugin;
+    private IRCCommands commands;
+    private IRCManager manager;
 
     public IRCBot(String nick, J2MC_IRC j2mc_irc, IRCManager manager) {
         this.setName(nick);
@@ -44,8 +44,8 @@ public class IRCBot extends PircBot {
         this.plugin.getLogger().info(targetNick + " got invited to channel " + channel + " by " + sourceNick);
         if (sourceNick.equalsIgnoreCase("chanserv") && targetNick.equalsIgnoreCase(this.getNick())) {
             this.plugin.getLogger().info("Detected this was an invite from chanserv, so I'm going to join the channel");
-            this.joinChannel(this.plugin.AdminChannel);
-            this.joinChannel(this.plugin.NormalChannel);
+            this.joinChannel(this.plugin.adminChannel);
+            this.joinChannel(this.plugin.normalChannel);
         }
     }
 
@@ -56,7 +56,7 @@ public class IRCBot extends PircBot {
         final String[] MessageArray = message.split(" ");
 
         // Public channel commands.
-        if (channel.equalsIgnoreCase(this.plugin.NormalChannel)) {
+        if (channel.equalsIgnoreCase(this.plugin.normalChannel)) {
             // !msg command
             if (MessageArray[0].equalsIgnoreCase("!msg")) {
                 final String toSend = message.substring(5);
@@ -142,7 +142,7 @@ public class IRCBot extends PircBot {
         }
 
         // Admin chanel commands.
-        if (channel.equalsIgnoreCase(this.plugin.AdminChannel)) {
+        if (channel.equalsIgnoreCase(this.plugin.adminChannel)) {
             // !has command
             if (MessageArray[0].equalsIgnoreCase("!has")) {
                 final String player = MessageArray[1];
@@ -179,7 +179,7 @@ public class IRCBot extends PircBot {
         if ((sourceNick.equalsIgnoreCase("authserv") || sourceNick.equalsIgnoreCase("authServ@services.gamesurge.net")) && target.equalsIgnoreCase(this.getNick())) {
             this.plugin.getLogger().info("Authserv said this to me: " + notice);
             if (notice.contains("Your hostmask is not valid for account ")) {
-                this.sendMessage("AuthServ", "authcookie " + this.plugin.AuthservUsername);
+                this.sendMessage("AuthServ", "authcookie " + this.plugin.authservUsername);
                 this.plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
             }
         }
@@ -190,7 +190,7 @@ public class IRCBot extends PircBot {
         if (sender.equalsIgnoreCase("authserv") || sender.equalsIgnoreCase("authServ@services.gamesurge.net")) {
             this.plugin.getLogger().info("Authserv said this to me: " + message);
             if (message.contains("Your hostmask is not valid for account")) {
-                this.sendMessage("AuthServ", "authcookie " + this.plugin.AuthservUsername);
+                this.sendMessage("AuthServ", "authcookie " + this.plugin.authservUsername);
                 this.plugin.getLogger().info("I detected this was an auth cookie request and automatically sent a message to authserv for a cookie. Use /ircmessage to reply to authserv");
             }
         }
@@ -217,7 +217,7 @@ public class IRCBot extends PircBot {
             final String toSendIRC = "[IRC] <" + sender + "> " + toSend;
             toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + toSend;
             this.plugin.getServer().broadcastMessage(toSend);
-            this.sendMessage(this.plugin.NormalChannel, toSendIRC);
+            this.sendMessage(this.plugin.normalChannel, toSendIRC);
         }
         // kick command
         if (MessageArray[0].equalsIgnoreCase("kick")) {

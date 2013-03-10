@@ -12,8 +12,8 @@ import to.joe.j2mc.core.exceptions.BadPlayerMatchException;
 
 public class IRCCommands {
 
-    J2MC_IRC plugin;
-    IRCBot bot;
+    private J2MC_IRC plugin;
+    private IRCBot bot;
 
     public IRCCommands(IRCBot bot, J2MC_IRC IRC) {
         this.plugin = IRC;
@@ -109,7 +109,7 @@ public class IRCCommands {
             }
         }
         this.bot.sendNotice(sender, "Broadcasted your message");
-        this.bot.sendMessage(this.plugin.NormalChannel, "<ADMIN> " + message);
+        this.bot.sendMessage(this.plugin.normalChannel, "<ADMIN> " + message);
     }
 
     public void dotKickCommand(String partialname, String reason, String sender, String hostname) {
@@ -126,7 +126,7 @@ public class IRCCommands {
         }
         target.kickPlayer("Kicked: " + reason);
         this.bot.sendNotice(sender, target.getName() + " kicked.");
-        this.bot.sendMessage(this.plugin.NormalChannel, target.getName() + " kicked (" + reason + ")");
+        this.bot.sendMessage(this.plugin.normalChannel, target.getName() + " kicked (" + reason + ")");
         J2MC_Manager.getCore().adminAndLog(this.plugin.hosts.get(hostname) + "-irc kicked " + target.getName() + "(" + reason + ")");
         J2MC_Manager.getCore().messageNonAdmin(ChatColor.RED + target.getName() + " kicked (" + reason + ")");
     }
@@ -153,14 +153,14 @@ public class IRCCommands {
 
     public void MeCommand(String sender, String message) {
         this.plugin.getServer().broadcastMessage(ChatColor.AQUA + "(IRC) *" + sender + " " + message);
-        this.bot.sendMessage(this.plugin.NormalChannel, "[IRC] *" + sender + " " + message);
+        this.bot.sendMessage(this.plugin.normalChannel, "[IRC] *" + sender + " " + message);
     }
 
     public void msgCommand(String sender, String message) {
         final String toSendIRC = "[IRC] <" + sender + "> " + message;
         final String toSend = "(IRC) <" + ChatColor.AQUA + sender + ChatColor.WHITE + "> " + message;
         this.plugin.getServer().broadcastMessage(toSend);
-        this.bot.sendMessage(this.plugin.NormalChannel, toSendIRC);
+        this.bot.sendMessage(this.plugin.normalChannel, toSendIRC);
     }
 
     public void PlayerListCommandInPrivate(String channel) {

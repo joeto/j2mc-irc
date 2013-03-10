@@ -7,10 +7,10 @@ import to.joe.j2mc.irc.J2MC_IRC;
 
 public class Queue extends TimerTask {
 
-    J2MC_IRC plugin;
-    int OutGoingMessages = 0;
-    ArrayList<String> messages = new ArrayList<String>();
-    int SimilarMessagesOut = 0;
+    private J2MC_IRC plugin;
+    private int OutGoingMessages = 0;
+    private ArrayList<String> messages = new ArrayList<String>();
+    private int SimilarMessagesOut = 0;
 
     public Queue(J2MC_IRC plugin) {
         this.plugin = plugin;
@@ -43,15 +43,15 @@ public class Queue extends TimerTask {
                 Thread.sleep(1000);
             } catch (final InterruptedException e) {
             }
-            this.plugin.IRCManager.bot.sendMessage(channel, message);
+            this.plugin.ircManager.bot.sendMessage(channel, message);
         } else if ((this.OutGoingMessages >= 20)) {
             try {
                 Thread.sleep(2000);
             } catch (final InterruptedException e) {
             }
-            this.plugin.IRCManager.bot.sendMessage(channel, message);
+            this.plugin.ircManager.bot.sendMessage(channel, message);
         } else {
-            this.plugin.IRCManager.bot.sendMessage(channel, message);
+            this.plugin.ircManager.bot.sendMessage(channel, message);
         }
     }
 

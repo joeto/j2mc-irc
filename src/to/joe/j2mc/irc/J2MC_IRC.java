@@ -32,26 +32,26 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     public Queue queue;
     Timer timer;
     public HashMap<String, String> hosts;
-    public IRCManager IRCManager;
-    public String ServerHost;
-    public int ServerPort;
+    public IRCManager ircManager;
+    public String serverHost;
+    public int serverPort;
     public String nick;
     public boolean bindToIP;
-    public String BindIP;
-    public String NormalChannel;
-    public String AdminChannel;
-    public String AuthservUsername;
-    public String AuthservPassword;
-    public boolean AnnounceFlow;
+    public String bindIP;
+    public String normalChannel;
+    public String adminChannel;
+    public String authservUsername;
+    public String authservPassword;
+    public boolean announceFlow;
     public boolean isBansEnabled = false;
-    public List<String> AdminGroups;
+    public List<String> adminGroups;
     public long lastUp;
 
     @Override
     public void onDisable() {
         this.timer.cancel();
         this.getServer().getScheduler().cancelTasks(this);
-        this.IRCManager.disconnect();
+        this.ircManager.disconnect();
         this.getLogger().info("IRC module disabled");
     }
 
@@ -68,14 +68,14 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
         this.getCommand("ircmessage").setExecutor(new IRCMessageCommand(this));
 
         this.lastUp = 0L;
-        this.IRCManager = new IRCManager(this);
-        this.IRCManager.setDaemon(true);
+        this.ircManager = new IRCManager(this);
+        this.ircManager.setDaemon(true);
         this.queue = new Queue(this);
         this.timer = new Timer();
         this.timer.schedule(this.queue, 10000, 10000);
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UptimeSetter(this), 20L, 20L);
         this.timer.schedule(new UptimeNagger(this), 60000, 60000);
-        this.IRCManager.start();
+        this.ircManager.start();
 
         this.getLogger().info("IRC module enabled");
     }
@@ -83,28 +83,28 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
     public void onMessage(AsyncPlayerChatEvent event) {
         final String message = "<" + event.getPlayer().getName() + "> " + event.getMessage();
-        this.queue.sendMessage(message, this.NormalChannel);
+        this.queue.sendMessage(message, this.normalChannel);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
-        if (this.AnnounceFlow && event.getJoinMessage() != null) {
-            this.queue.sendMessage(ChatColor.stripColor(event.getJoinMessage()), this.NormalChannel);
+        if (this.announceFlow && (event.getJoinMessage() != null)) {
+            this.queue.sendMessage(ChatColor.stripColor(event.getJoinMessage()), this.normalChannel);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
-        if (this.AnnounceFlow && event.getQuitMessage() != null) {
-            this.queue.sendMessage(ChatColor.stripColor(event.getQuitMessage()), this.NormalChannel);
+        if (this.announceFlow && (event.getQuitMessage() != null)) {
+            this.queue.sendMessage(ChatColor.stripColor(event.getQuitMessage()), this.normalChannel);
         }
     }
 
     public void readData() {
-        this.AdminGroups = this.getConfig().getStringList("commandgroups");
+        this.adminGroups = this.getConfig().getStringList("commandgroups");
 
         this.hosts = new HashMap<String, String>();
-        for (final String group : this.AdminGroups) {
+        for (final String group : this.adminGroups) {
             try {
                 final PreparedStatement ps = J2MC_Manager.getMySQL().getFreshPreparedStatementHotFromTheOven("SELECT `name`,`IRChost` FROM users WHERE `IRChost` <> '' AND `group`=?");
                 ps.setString(1, group);
@@ -118,19 +118,19 @@ public class J2MC_IRC extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
         }
-        this.ServerHost = this.getConfig().getString("server.host");
-        this.ServerPort = this.getConfig().getInt("server.port");
+        this.serverHost = this.getConfig().getString("server.host");
+        this.serverPort = this.getConfig().getInt("server.port");
         this.nick = this.getConfig().getString("server.nick");
         this.bindToIP = this.getConfig().getBoolean("server.bindtoip");
-        this.BindIP = this.getConfig().getString("server.bindip");
+        this.bindIP = this.getConfig().getString("server.bindip");
 
-        this.NormalChannel = this.getConfig().getString("channels.general");
-        this.AdminChannel = this.getConfig().getString("channels.admin");
+        this.normalChannel = this.getConfig().getString("channels.general");
+        this.adminChannel = this.getConfig().getString("channels.admin");
 
-        this.AuthservUsername = this.getConfig().getString("authserv.username");
-        this.AuthservPassword = this.getConfig().getString("authserv.password");
+        this.authservUsername = this.getConfig().getString("authserv.username");
+        this.authservPassword = this.getConfig().getString("authserv.password");
 
-        this.AnnounceFlow = this.getConfig().getBoolean("announce_flow", false);
+        this.announceFlow = this.getConfig().getBoolean("announce_flow", false);
 
         if (this.getServer().getPluginManager().isPluginEnabled("Bans")) {
             this.isBansEnabled = true;

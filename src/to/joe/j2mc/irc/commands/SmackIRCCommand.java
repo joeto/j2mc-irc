@@ -18,11 +18,11 @@ public class SmackIRCCommand extends MasterCommand<J2MC_IRC> {
         if ((args.length > 0) && args[0].equalsIgnoreCase("settingsonly")) {
             return;
         }
-        this.plugin.IRCManager.disconnect();
+        this.plugin.ircManager.disconnect();
         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
             @Override
             public void run() {
-                SmackIRCCommand.this.plugin.IRCManager.connect();
+                SmackIRCCommand.this.plugin.ircManager.connect();
             }
         }, 100L);
     }

@@ -22,7 +22,7 @@ public class IRCMessageCommand extends MasterCommand<J2MC_IRC> {
         }
         final String target = args[0];
         final String message = J2MC_Core.combineSplit(1, args, " ");
-        this.plugin.IRCManager.bot.sendMessage(target, message);
+        this.plugin.ircManager.bot.sendMessage(target, message);
     }
 
 }

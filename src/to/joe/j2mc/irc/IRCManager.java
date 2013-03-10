@@ -5,7 +5,7 @@ import org.jibble.pircbot.PircColors;
 
 public class IRCManager extends Thread {
 
-    J2MC_IRC plugin;
+    private J2MC_IRC plugin;
     public IRCBot bot;
 
     public IRCManager(J2MC_IRC IRC) {
@@ -20,23 +20,23 @@ public class IRCManager extends Thread {
 
     public void connect() {
         try {
-            this.plugin.getLogger().info("Attempting connection to " + this.plugin.ServerHost + ":" + this.plugin.ServerPort);
+            this.plugin.getLogger().info("Attempting connection to " + this.plugin.serverHost + ":" + this.plugin.serverPort);
             if (this.plugin.bindToIP) {
-                this.bot.connect(this.plugin.ServerHost, this.plugin.ServerPort, this.plugin.BindIP);
+                this.bot.connect(this.plugin.serverHost, this.plugin.serverPort, this.plugin.bindIP);
             } else {
-                this.bot.connectWithNoB(this.plugin.ServerHost, this.plugin.ServerPort, null);
+                this.bot.connectWithNoB(this.plugin.serverHost, this.plugin.serverPort, null);
             }
         } catch (final Exception e) {
             e.printStackTrace();
         }
         this.plugin.getLogger().info("Connected! Attempting to auth and join channels.");
-        this.bot.joinChannel(this.plugin.NormalChannel);
-        this.bot.sendMessage(this.plugin.NormalChannel, "Meow. I am alive");
-        this.plugin.getLogger().info("Attempting auth with " + this.plugin.AuthservUsername + " and " + this.plugin.AuthservPassword);
-        this.bot.sendMessage("authserv@services.gamesurge.net", "auth " + this.plugin.AuthservUsername + " " + this.plugin.AuthservPassword);
-        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.AdminChannel);
-        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.NormalChannel);
-        this.bot.joinChannel(this.plugin.AdminChannel);
+        this.bot.joinChannel(this.plugin.normalChannel);
+        this.bot.sendMessage(this.plugin.normalChannel, "Meow. I am alive");
+        this.plugin.getLogger().info("Attempting auth with " + this.plugin.authservUsername + " and " + this.plugin.authservPassword);
+        this.bot.sendMessage("authserv@services.gamesurge.net", "auth " + this.plugin.authservUsername + " " + this.plugin.authservPassword);
+        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.adminChannel);
+        this.bot.sendMessage("Chanserv", "inviteme " + this.plugin.normalChannel);
+        this.bot.joinChannel(this.plugin.adminChannel);
     }
 
     public void disconnect() {
@@ -45,9 +45,9 @@ public class IRCManager extends Thread {
 
     public void sendMessage(String message, boolean adminChannel) {
         if (adminChannel) {
-            this.bot.sendMessage(this.plugin.AdminChannel, this.colors(message));
+            this.bot.sendMessage(this.plugin.adminChannel, this.colors(message));
         } else {
-            this.bot.sendMessage(this.plugin.NormalChannel, this.colors(message));
+            this.bot.sendMessage(this.plugin.normalChannel, this.colors(message));
         }
     }
 
